@@ -1,0 +1,14 @@
+{% set title = "Welcome" %}
+{% extends "base.html" %}
+{% block scripts %}
+  {{super()}}
+{% endblock %}
+{% block app_content %}
+<div class="mt-5 text-center">
+    <h1>Welcome to Flask Core, {{user.firstName}}!</h1>
+    <br>
+    <h3>So glad you're here.</h3>
+    <br>
+    <a class="btn btn-primary btn-lg text-center" type="button" href='/home'>Check out our home page!</a>
+</div>
+{% endblock %}
