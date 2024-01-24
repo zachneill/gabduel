@@ -26,3 +26,14 @@ def getUserByUsername(username):
 
 def getUserById(id):
     return User.query.get(int(id))
+
+
+def getUsers():
+    return User.query.all()
+
+
+def makeAdmin(id):
+    user = getUserById(id)
+    user.isAdmin = True
+    db.session.commit()
+    return user

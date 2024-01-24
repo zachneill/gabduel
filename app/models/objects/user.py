@@ -10,7 +10,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     isAdmin = db.Column(db.Boolean, nullable=False, default=False)
-    posts = db.relationship('Post')
+    posts = db.relationship('Post', backref="user", passive_deletes=True)
 
     def __repr__(self):
         return f"User('{self.firstName}', '{self.lastName}', '{self.email}')"

@@ -6,19 +6,19 @@
 
 {% block app_content %}
   <div class="mt-5 text-center">
-    <h1>This is Flask Blog</h1>
+    <h1>This is the Flask Blog</h1>
     <br>
     <br>
-    {% for post in user.posts %}
+    {% for post in posts %}
       <div class="card">
         <div class="card-body">
           <h3 class="card-title">{{post.title}}</h3>
-          <h6 class="card-subtitle mb-2 text-muted">by {{post.author_id}}</h6>
-
+          <h6 class="card-subtitle mb-2 text-muted">by {{post.user.firstName}} {{post.user.lastName}} on {{post.date.strftime('%m/%d/%Y')}}</h6>
           <p class="card-text">{{post.content}} </p>
           <br>
         </div>
       </div>
+    <br>
     {% endfor %}
   </div>
 {% endblock %}
