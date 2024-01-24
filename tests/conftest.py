@@ -6,10 +6,14 @@ from app import create_app
 @pytest.fixture(scope='module')
 def newUser():
     """Fixture for unit tests. Creates a new user object."""
-    user = User('email', 'FN', 'LN', 'username', 'password', False)
+    user = User('email@email.com', 'FN', 'LN', 'username', 'password', False)
     return user
 
-
+@pytest.fixture(scope='module')
+def secondUser():
+    """For when two users are needed."""
+    user = User('email@email.com', 'FN', 'LN', 'username', 'password', False)
+    return user
 @pytest.fixture(scope='module')
 def testClient():
     """Fixture for functional tests. Creates a test client for the application."""

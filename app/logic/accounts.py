@@ -5,11 +5,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 def createUser(data):
     """Create a new user"""
-    newUser = User(email=data['email'], firstName=data['firstName'], lastName=data['lastName'],
+    try:
+        newUser = User(email=data['email'], firstName=data['firstName'], lastName=data['lastName'],
                    username=data['username'], password=generate_password_hash(data['password'], method='scrypt'),
                    isAdmin=data['isAdmin'])
-    db.session.add(newUser)
-    db.session.commit()
+        db.session.add(newUser)
+        db.session.commit()
+    except Exception as e:
+        print("Failed to create user with error", e)
+        return None
     return newUser
 
 

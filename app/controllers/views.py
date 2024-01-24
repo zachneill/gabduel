@@ -11,7 +11,11 @@ views = Blueprint('views', __name__)
 @login_required
 def home():
     """Render the home page"""
-    posts = getPosts()
+    try:
+        posts = getPosts()
+    except Exception as e:
+        posts = None
+        print("Failed to get posts with error", e)
     return render_template("home.html", user=current_user, posts=posts)
 
 
@@ -19,4 +23,3 @@ def home():
 def about():
     """Render the about page"""
     return render_template("about.html", user=current_user)
-

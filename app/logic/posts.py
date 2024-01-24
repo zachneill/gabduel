@@ -5,9 +5,14 @@ from database import db
 
 def createPost(data):
     """Create a new post"""
-    newPost = Post(title=data['title'], content=data['content'], author=data['author'])
-    db.session.add(newPost)
-    db.session.commit()
+    try:
+        newPost = Post(title=data['title'], content=data['content'], author=data['author'])
+        db.session.add(newPost)
+        db.session.commit()
+    except Exception as e:
+        print("Failed to create post with error", e)
+        return None
+
     return newPost
 
 

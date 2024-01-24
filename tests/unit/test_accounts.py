@@ -27,16 +27,42 @@ def test_createUser(newUser):
     assert newUser.firstName == 'FN'
     assert newUser.lastName == 'LN'
     assert newUser.username == 'username'
-    assert newUser.password == 'password'
     assert not newUser.isAdmin
+    # Check the password is hashed
+    assert newUser.password.exists()
 
 
-def test_createUserNoAttributes():
+def test_createUserNoAttributes(newUser):
     """Test the createUser function
         It should not create a new user if not enough attributes are provided
         """
-    # Create a test user
+    # Test with no email
     with pytest.raises(TypeError):
         createUser(
             {'firstName': 'FN', 'lastName': 'LN', 'username': 'username', 'password': 'password',
              'isAdmin': False})
+    # Test with no first name
+    with pytest.raises(TypeError):
+        createUser(
+            {'email': "abc@abc.com", 'lastName': 'LN', 'username': 'username', 'password': 'password',
+             'isAdmin': False})
+    # Test with no last name
+    with pytest.raises(TypeError):
+        createUser(
+            {'email': "abc@abc.com", 'firstName': 'FN', 'username': 'username', 'password': 'password',
+             'isAdmin': False})
+    # Test with no username
+    with pytest.raises(TypeError):
+        createUser(
+            {'email': "abc@abc.com", 'firstName': 'FN', 'lastName': 'LN', 'password': 'password',
+             'isAdmin': False})
+    # Test with no password
+    with pytest.raises(TypeError):
+        createUser(
+            {'email': "abc@abc.com", 'firstName': 'FN', 'lastName': 'LN', 'username': 'username',
+             'isAdmin': False})
+    # Test with no isAdmin, which should default to False
+    createUser(
+        {'email': "abc@abc.com", 'firstName': 'FN', 'lastName': 'LN', 'username': 'username',
+         'password': 'password'})
+    assert not newUser.isAdmin

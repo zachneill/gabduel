@@ -102,16 +102,25 @@ def admin():
     # Check if the form is valid
     if form.validate_on_submit():
         # Make the user an admin
-        user = makeAdmin(current_user.id)
-        flash(f'{user.firstName} is now an admin!', 'success')
+        try:
+            user = makeAdmin(current_user.id)
+            flash(f'{user.firstName} is now an admin!', 'success')
+        except Exception as e:
+            print("Failed to make user an admin with error", e)
+            flash("Failed to make user an admin.", category="danger")
+
         return redirect('/admin')
 
-    user = getUserById(current_user.id)
     # Check if the user is NOT an admin
-    if not user.isAdmin:
-        flash("You are not an admin.", category="warning")
-        allUsers = None
-    else:
-        # Set up table for jinja display
-        allUsers = getUsers()
+    allUsers = None
+    try:
+        user = getUserById(current_user.id)
+        if not user.isAdmin:
+            flash("You are not an admin.", category="warning")
+        else:
+            # Set up table for jinja display
+            allUsers = getUsers()
+    except Exception as e:
+        print("Failed to check user with error", e)
+        flash("Failed to check user.", category="danger")
     return render_template("admin.html", form=form, current_user=current_user, user=user, allUsers=allUsers)
