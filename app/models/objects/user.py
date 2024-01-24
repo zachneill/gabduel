@@ -1,8 +1,10 @@
-from database import db
+"""This file contains the User object for the database"""
 from flask_login import UserMixin
+from database import db
 
 
 class User(db.Model, UserMixin):
+    """User model"""
     id = db.Column(db.Integer, primary_key=True)
     firstName = db.Column(db.String(30), nullable=False)
     lastName = db.Column(db.String(30), nullable=False)

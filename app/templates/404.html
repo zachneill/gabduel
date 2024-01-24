@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% set title = "404" %}
+{% block scripts %}
+  {{super()}}
+{% endblock %}
+
+{% block app_content %}
+<div class="mt-5 text-center">
+    <h1>404 Error</h1>
+    <h5 class="mt-5 pt-5">It looks like the content you are looking for does not exist or was moved.</h5>
+    <br class="mt-5 pt-5"/>
+    <br class="mt-5 pt-5"/>
+</div>
+{% endblock %}

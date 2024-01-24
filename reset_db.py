@@ -1,3 +1,4 @@
+"""This file resets the database."""
 from app import create_app
 from database import db
 

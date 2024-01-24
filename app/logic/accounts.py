@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 def createUser(data):
+    """Create a new user"""
     newUser = User(email=data['email'], firstName=data['firstName'], lastName=data['lastName'],
                    username=data['username'], password=generate_password_hash(data['password'], method='scrypt'),
                    isAdmin=data['isAdmin'])
@@ -12,23 +13,28 @@ def createUser(data):
     return newUser
 
 
-def checkPassword(passwordindb, userinput):
-    return check_password_hash(passwordindb, userinput)
+def checkPassword(password, userinput):
+    """Check if the input password is correct with the database"""
+    return check_password_hash(password, userinput)
 
 
 def getUserByEmail(email):
+    """Get a user by their email address"""
     return User.query.filter_by(email=email).first()
 
 
 def getUserByUsername(username):
+    """Get a user by their username"""
     return User.query.filter_by(username=username).first()
 
 
-def getUserById(id):
-    return User.query.get(int(id))
+def getUserById(userId):
+    """Get a user by their id"""
+    return User.query.get(int(userId))
 
 
 def getUsers():
+    """Get all users"""
     return User.query.all()
 
 
