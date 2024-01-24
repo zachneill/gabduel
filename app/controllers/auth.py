@@ -1,14 +1,13 @@
-from flask import Blueprint, render_template, flash, url_for, redirect
+from flask import Blueprint, render_template, flash, url_for, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUserById, getUsers, \
     makeAdmin
-from app.logic.posts import createPost
+from app.logic.posts import createPost, getPostById, updatePost, deletePost
 from app.models.forms.LoginForm import LoginForm
 from app.models.forms.PostForm import PostForm
 from app.models.forms.SignupForm import SignupForm
 from app.models.forms.AdminForm import AdminForm
-
 
 auth = Blueprint('auth', __name__)
 
@@ -80,7 +79,7 @@ def logout():
     return redirect('/login')
 
 
-@auth.route('/create', methods=['GET', 'POST'])
+@auth.route('/post', methods=['GET', 'POST'])
 @login_required
 def create():
     """Create post route"""
@@ -91,7 +90,43 @@ def create():
         createPost({"content": form.content.data, "title": form.title.data, "author": current_user.id})
         flash('Post created!', 'success')
         return redirect('/home')
-    return render_template("create.html", form=form, user=current_user)
+    return render_template("post.html", form=form, user=current_user, postId=None)
+
+
+@auth.route('/post/<postId>', methods=['GET', 'POST'])
+@login_required
+def update(postId):
+    """Update post route"""
+    # Check if the user is the author of the post
+    post = getPostById(postId)
+    if post.author != current_user.id:
+        flash('You are not the author of this post.', 'danger')
+        return redirect('/home')
+    form = PostForm(obj=post)
+    # Check if the form is valid
+    if form.validate_on_submit():
+        # Update the post
+        updatePost({"id": postId, "content": form.content.data, "title": form.title.data})
+        flash('Post updated!', 'success')
+        return redirect('/home')
+
+    return render_template("post.html", form=form, user=current_user, postId=postId)
+
+
+@auth.route('/delete', methods=['POST'])
+@login_required
+def delete():
+    """Delete post route"""
+    # Check if the user is the author of the post
+    postId = int(request.form['postId'])
+    post = getPostById(postId)
+    # Check if the form is valid
+    if post.author == current_user.id:
+        # Delete the post
+        deletePost({"id": postId})
+    else:
+        print('User is not the author')
+    return redirect('/home')
 
 
 @auth.route('/admin', methods=["GET", "POST"])
