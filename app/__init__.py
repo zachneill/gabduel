@@ -2,7 +2,7 @@ import os
 
 from app.logic.accounts import getUserById
 from database import db
-from app.controllers.main import main
+from app.controllers.views import views
 from app.controllers.auth import auth
 from flask import Flask
 from flask_bootstrap import Bootstrap5
@@ -10,6 +10,7 @@ from flask_wtf import CSRFProtect
 import secrets
 from os import path
 from flask_login import LoginManager
+
 
 def create_app():
     app = Flask(__name__)
@@ -29,7 +30,7 @@ def create_app():
     def load_user(user_id):
         return getUserById(user_id)
 
-    app.register_blueprint(main, url_prefix='/')
+    app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
     return app

@@ -12,7 +12,7 @@
 
   <title>
     {% block title %}
-      {% if title %}Flask Core - {{ title }}{% else %}Flask Core{% endif %}
+      {% if title %}Flask Blog - {{ title }}{% else %}Flask Blog{% endif %}
     {% endblock %}
   </title>
 </head>
@@ -20,88 +20,93 @@
 <body class="mb-n4">
 
 {% block content %}
-<div>
-  <div class="row g-0">
-    <div class='col-12 col-md scroll-container overflow-visible'>
-      <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/home">Flask Core</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              {% if user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="/home">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/logout">Log out</a>
-              </li>
-              {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href="/signup">Sign up</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/login">Log in</a>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
+<div class="row g-0">
+  <div class='col-12 col-md scroll-container overflow-visible'>
+    <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/home">
+          Flask Blog
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log out</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/create">Create a Post</a>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/signup">Sign up</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Log in</a>
+            </li>
+            {% endif %}
+          </ul>
         </div>
-      </nav>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          {% if category == 'danger' %}
-            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center"
-                 data-bs-dismiss="alert" aria-label="Close" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% elif category == 'warning' %}
-            <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center"
-                 data-bs-dismiss="alert" aria-label="Close" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% elif category == 'info' %}
-            <div class="alert alert-info alert-dismissible fade show d-flex align-items-center"
-                 data-bs-dismiss="alert" aria-label="Close" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% else %}
-          <div class="alert alert-success alert-dismissible fade show d-flex align-items-center"
-              data-bs-dismiss="alert" aria-label="Close" role="alert">
-              {{ message }}
+      </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == 'danger' %}
+          <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center"
+               data-bs-dismiss="alert" aria-label="Close" role="alert">
+            {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
-          {% endif %}
-        {% endfor %}
-        {% endif %}
-      {% endwith %}
-      <div id="maincontent" class="main-content container">
-        {% block app_content %}
-          {# application content in the app_content block #}
-        {% endblock %}
-        <div class="position-fixed bottom-0 end-0 p-3">
+        {% elif category == 'warning' %}
+          <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center"
+               data-bs-dismiss="alert" aria-label="Close" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% elif category == 'info' %}
+          <div class="alert alert-info alert-dismissible fade show d-flex align-items-center"
+               data-bs-dismiss="alert" aria-label="Close" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% else %}
+        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center"
+            data-bs-dismiss="alert" aria-label="Close" role="alert">
+            {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="spacer my-0"></div>
+        {% endif %}
+      {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div id="maincontent" class="main-content container">
+      {% block app_content %}
+        {# application content in the app_content block #}
+      {% endblock %}
+      <div class="position-fixed bottom-0 end-0 p-3">
       </div>
+      <div class="spacer my-0"></div>
     </div>
-
-    {% block footer %}
-    <footer class="footer text-center m-auto" style="font-size:small; vertical-align: middle;">
-      <div class="container mb-2 mt-0" style="line-height:normal;"><br>
-        <span>
-            Created & Designed by Zach Neill
-        </span>
-      </div>
-    </footer>
-    {% endblock %}
   </div>
+
+  {% block footer %}
+  <footer class="footer text-center m-auto" style="font-size:small; vertical-align: middle;">
+    <div class="container mb-2 mt-0" style="line-height:normal;"><br>
+      <span>
+          Created & Designed by Zach Neill
+      </span>
+    </div>
+  </footer>
+  {% endblock %}
 </div>
 
 {% endblock %}
