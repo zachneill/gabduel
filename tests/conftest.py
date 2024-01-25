@@ -1,8 +1,9 @@
+import flask_login
 import pytest
 
 from app import create_app
 from app.models.objects.post import Post
-from app.models.objects.user import User as Users
+from app.models.objects.user import User as Users, User
 from database import db
 
 
@@ -16,7 +17,7 @@ def app():
 
 
 @pytest.fixture(autouse=True, scope='module')
-def unitContext(app, newUser, secondUser, newPost, secondPost):
+def unitContext(app, newUser, secondUser, newPost, secondPost, adminUser):
     """Fixture for functional tests. Creates a test client for the application."""
     with app.test_client() as testingClient:
         # Establish an application context before running the tests
@@ -24,6 +25,7 @@ def unitContext(app, newUser, secondUser, newPost, secondPost):
             db.create_all()
             db.session.add(newUser)
             db.session.add(secondUser)
+            db.session.add(adminUser)
             db.session.add(newPost)
             db.session.add(secondPost)
             yield testingClient
@@ -63,20 +65,36 @@ def secondUser(app):
 
 
 @pytest.fixture(scope='module')
+def adminUser(app):
+    """For when an admin user is needed."""
+    with app.app_context():
+        user = Users()
+        user.id = 100
+        user.email = 'admin@email.com'
+        user.firstName = 'FN'
+        user.lastName = 'LN'
+        user.username = 'admin'
+        user.password = 'password'
+        user.isAdmin = True
+        db.session.add(user)
+    return user
+
+
+@pytest.fixture(scope='module')
 def newPost(app, newUser):
     """Fixture for unit tests. Creates a new post object."""
     with app.app_context():
         """Fixture for unit tests. Creates a new post object."""
         post = Post()
-        post.title = 'title'
-        post.content = 'content'
+        post.title = 'title1'
+        post.content = 'content1'
         post.author = newUser.id
         db.session.add(post)
     return post
 
 
 @pytest.fixture(scope='module')
-def secondPost(app, newUser, secondUser):
+def secondPost(app, secondUser):
     """For when two posts are needed."""
     with app.app_context():
         post = Post()
@@ -87,11 +105,15 @@ def secondPost(app, newUser, secondUser):
     return post
 
 
-@pytest.fixture(scope='module')
-def testClient(app):
-    """Fixture for functional tests."""
+@pytest.fixture
+def authenticated_request(app, newUser):
+    """Fixture for functional tests. Used as a decorator to log in."""
+    with app.test_request_context():
+        yield flask_login.login_user(newUser)
 
-    with app.test_client() as testingClient:
-        # Establish an application context before running the tests
-        with app.app_context():
-            yield testingClient
+
+@pytest.fixture
+def admin_authenticated_request(app, adminUser):
+    """Fixture for functional tests. Used as a decorator to log in."""
+    with app.test_request_context():
+        yield flask_login.login_user(adminUser)

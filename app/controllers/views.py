@@ -10,11 +10,7 @@ views = Blueprint('views', __name__)
 @views.route('/home')
 def home():
     """Render the home page"""
-    try:
-        posts = getPosts()
-    except Exception as e:
-        posts = None
-        print("Failed to get posts with error", e)
+    posts = getPosts()
     return render_template("home.html", posts=posts)
 
 
