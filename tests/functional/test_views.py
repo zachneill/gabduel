@@ -1,3 +1,4 @@
+import pytest
 from flask import url_for
 
 
@@ -11,6 +12,10 @@ def test_404(app):
             assert response.status_code == 404
             assert b'404 Not Found' in response.data
 
+            response = testingClient.get('/fake')
+            assert response.status_code == 404
+            assert b'404 Not Found' in response.data
+
 
 def test_about(app):
     """Test the about page."""
@@ -18,9 +23,9 @@ def test_about(app):
     with app.test_client() as testingClient:
         # Establish an application context before running the tests
         with app.app_context():
-            response = testingClient.get(url_for('views.home'), follow_redirects=True)
+            response = testingClient.get(url_for('views.about'), follow_redirects=True)
             assert response.status_code == 200
-            # assert b'The Flask Blog is an established organization' in response.data
+            assert b'The Flask Blog is an established organization' in response.data
 
 
 def test_home(app):
@@ -31,4 +36,4 @@ def test_home(app):
         with app.app_context():
             response = testingClient.get(url_for('views.home'), follow_redirects=True)
             assert response.status_code == 200
-            # assert b'This is Flask Blog' in response.data
+            assert b'This is the Flask Blog' in response.data

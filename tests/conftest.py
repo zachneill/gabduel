@@ -60,7 +60,7 @@ def secondUser(app):
         user.username = 'username2'
         user.password = 'scrypt:32768:8:1$fajWmZeuTbMKdz7r$609c9395583ceffcdd714c5656794cb7c088de2af874cdb898c75d1c17145b1f8c03878bcd800435026fcf5989f6373a4b7f8b046d2f6c17810662842a3ecafc'
         user.isAdmin = False
-        # db.session.add(user)
+        db.session.add(user)
     return user
 
 

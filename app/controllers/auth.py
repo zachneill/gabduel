@@ -56,7 +56,7 @@ def signup():
         userUsername = getUserByUsername(form.username.data)
         # Check if the email or username already exists
         if userEmail or userUsername:
-            flash('Email or username already exists!', 'danger')
+            flash('Email or username already exists.', 'danger')
             return redirect(url_for("auth.signup"))
         else:
             # Create the user
@@ -70,7 +70,7 @@ def signup():
     return render_template("signup.html", form=form, user=current_user)
 
 
-@auth.route('/logout')
+@auth.route('/logout', methods=['GET'])
 @login_required
 def logout():
     """Logout route"""
@@ -99,7 +99,7 @@ def update(postId):
     """Update post route"""
     # Check if the user is the author of the post
     post = getPostById(postId)
-    if post.author != current_user.id:
+    if not post or post.author != current_user.id:
         flash('You are not the author of this post.', 'danger')
         return redirect('/home')
     form = PostForm(obj=post)
@@ -136,26 +136,15 @@ def admin():
     form = AdminForm()
     # Check if the form is valid
     if form.validate_on_submit():
-        # Make the user an admin
-        try:
-            user = makeAdmin(current_user.id)
-            flash(f'{user.firstName} is now an admin!', 'success')
-        except Exception as e:
-            print("Failed to make user an admin with error", e)
-            flash("Failed to make user an admin.", category="danger")
-
+        user = makeAdmin(current_user.id)
+        flash(f'{user.firstName} is now an admin!', 'success')
         return redirect('/admin')
 
     # Check if the user is NOT an admin
     allUsers = None
-    try:
-        user = getUserById(current_user.id)
-        if not user.isAdmin:
-            flash("You are not an admin.", category="warning")
-        else:
-            # Set up table for jinja display
-            allUsers = getUsers()
-    except Exception as e:
-        print("Failed to check user with error", e)
-        flash("Failed to check user.", category="danger")
-    return render_template("admin.html", form=form, current_user=current_user, user=user, allUsers=allUsers)
+    if not current_user.isAdmin:
+        flash("You are not an admin.", category="warning")
+    else:
+        # Set up table for jinja display
+        allUsers = getUsers()
+    return render_template("admin.html", form=form, current_user=current_user, allUsers=allUsers)
