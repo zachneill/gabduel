@@ -7,7 +7,7 @@
 
 {% block app_content %}
   <div class="mt-5 text-center">
-    <h1>{{ "Create a" if postId == current_user else "Update" }} Post</h1>
+    <h1>{{ "Update " + post.title if post else "Create a Post" }}</h1>
     <br class="mt-5 pt-5"/>
     <br class="mt-5 pt-5"/>
     {{ render_form(form) }}

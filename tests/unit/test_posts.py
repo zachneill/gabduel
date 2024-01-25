@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 from app.logic.posts import createPost, getPosts, getPostById, updatePost, deletePost
 
 
-def test_createPost(newUser, testClient):
+def test_createPost(newUser, unitContext):
     """Test the createPost function
         It should create a new post with the correct attributes
     """
@@ -17,7 +17,7 @@ def test_createPost(newUser, testClient):
     assert post.author == newUser.id
 
 
-def test_createPostNoAttributes(newUser, testClient):
+def test_createPostNoAttributes(newUser, unitContext):
     """Test the createPost function
         It should not create a new post if not enough attributes are provided
     """
@@ -78,7 +78,7 @@ def test_updatePostNoAttributes(newPost):
         updatePost({'id': newPost.id, 'title': 'new title'})
 
 
-def test_deletePost(newPost, testClient):
+def test_deletePost(newPost, unitContext):
     """Test the deletePost function
         It should delete the post
     """

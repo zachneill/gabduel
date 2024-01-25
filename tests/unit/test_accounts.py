@@ -16,7 +16,7 @@ def test_Users(newUser):
     assert not newUser.isAdmin
 
 
-def test_createUser(testClient):
+def test_createUser(unitContext):
     """Test the createUser function
         It should create a new user with the correct attributes
     """
@@ -80,7 +80,7 @@ def test_checkPassword(secondUser):
     assert not checkPassword(secondUser.password, 'wrongpassword')
 
 
-def test_getUserByEmail(testClient, newUser):
+def test_getUserByEmail(unitContext, newUser):
     """Test the getUserByEmail function
         It should return the correct user
     """
@@ -90,7 +90,7 @@ def test_getUserByEmail(testClient, newUser):
     assert not getUserByEmail('wrongemail@email.com')
 
 
-def test_getUserByUsername(testClient, newUser):
+def test_getUserByUsername(unitContext, newUser):
     """Test the getUserByUsername function
         It should return the correct user
     """
@@ -100,7 +100,7 @@ def test_getUserByUsername(testClient, newUser):
     assert not getUserByUsername('wrongusername')
 
 
-def test_getUserById(testClient, newUser):
+def test_getUserById(unitContext, newUser):
     """Test the getUserById function
         It should return the correct user
     """
@@ -110,7 +110,7 @@ def test_getUserById(testClient, newUser):
     assert not getUserById(999)
 
 
-def test_getUsers(newUser, secondUser, testClient):
+def test_getUsers(newUser, secondUser, unitContext):
     """Test the getUsers function
         It should return all users
     """

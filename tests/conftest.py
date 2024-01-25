@@ -7,12 +7,17 @@ from database import db
 
 
 @pytest.fixture(scope='module')
-def testClient(newUser, secondUser, newPost, secondPost):
-    """Fixture for functional tests. Creates a test client for the application."""
+def app():
+    """Fixture for functional tests. Inits the app."""
     app = create_app()
     app.config['TESTING'] = True
     app.config['WTF_CSRF_ENABLED'] = False
+    return app
 
+
+@pytest.fixture(autouse=True, scope='module')
+def unitContext(app, newUser, secondUser, newPost, secondPost):
+    """Fixture for functional tests. Creates a test client for the application."""
     with app.test_client() as testingClient:
         # Establish an application context before running the tests
         with app.app_context():
@@ -21,20 +26,16 @@ def testClient(newUser, secondUser, newPost, secondPost):
             db.session.add(secondUser)
             db.session.add(newPost)
             db.session.add(secondPost)
-            db.session.add(Post(title='title2', content='content2', author=2))
             yield testingClient
             db.drop_all()
 
 
 @pytest.fixture(scope='module')
-def newUser():
+def newUser(app):
     """Fixture for unit tests. Creates a new user object."""
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['WTF_CSRF_ENABLED'] = False
     with app.app_context():
         user = Users()
-        user.id = 1
+        user.id = 98
         user.email = 'email@email.com'
         user.firstName = 'FN'
         user.lastName = 'LN'
@@ -46,29 +47,24 @@ def newUser():
 
 
 @pytest.fixture(scope='module')
-def secondUser():
+def secondUser(app):
     """For when two users are needed, or a user whose password is hashed."""
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['WTF_CSRF_ENABLED'] = False
     with app.app_context():
         user = Users()
-        user.id = 2
+        user.id = 99
         user.email = 'email2@email.com'
         user.firstName = 'FN'
         user.lastName = 'LN'
         user.username = 'username2'
         user.password = 'scrypt:32768:8:1$fajWmZeuTbMKdz7r$609c9395583ceffcdd714c5656794cb7c088de2af874cdb898c75d1c17145b1f8c03878bcd800435026fcf5989f6373a4b7f8b046d2f6c17810662842a3ecafc'
         user.isAdmin = False
-        db.session.add(user)
+        # db.session.add(user)
     return user
 
 
 @pytest.fixture(scope='module')
-def newPost(newUser):
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['WTF_CSRF_ENABLED'] = False
+def newPost(app, newUser):
+    """Fixture for unit tests. Creates a new post object."""
     with app.app_context():
         """Fixture for unit tests. Creates a new post object."""
         post = Post()
@@ -80,11 +76,8 @@ def newPost(newUser):
 
 
 @pytest.fixture(scope='module')
-def secondPost(newUser, secondUser):
+def secondPost(app, newUser, secondUser):
     """For when two posts are needed."""
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['WTF_CSRF_ENABLED'] = False
     with app.app_context():
         post = Post()
         post.title = 'title2'
@@ -93,3 +86,12 @@ def secondPost(newUser, secondUser):
         db.session.add(post)
     return post
 
+
+@pytest.fixture(scope='module')
+def testClient(app):
+    """Fixture for functional tests."""
+
+    with app.test_client() as testingClient:
+        # Establish an application context before running the tests
+        with app.app_context():
+            yield testingClient

@@ -65,7 +65,7 @@ def signup():
                                "password": form.password.data, "isAdmin": False})
             login_user(user, remember=form.rememberMe.data)
             flash(f'Account created for {form.firstName.data}!', 'success')
-            return render_template("home.html", user=current_user)
+            return redirect("/home")
 
     return render_template("signup.html", form=form, user=current_user)
 
@@ -90,7 +90,7 @@ def create():
         createPost({"content": form.content.data, "title": form.title.data, "author": current_user.id})
         flash('Post created!', 'success')
         return redirect('/home')
-    return render_template("post.html", form=form, user=current_user, postId=None)
+    return render_template("post.html", form=form, user=current_user, post=None)
 
 
 @auth.route('/post/<postId>', methods=['GET', 'POST'])
@@ -110,7 +110,7 @@ def update(postId):
         flash('Post updated!', 'success')
         return redirect('/home')
 
-    return render_template("post.html", form=form, user=current_user, postId=postId)
+    return render_template("post.html", form=form, user=current_user, post=post)
 
 
 @auth.route('/delete', methods=['POST'])
