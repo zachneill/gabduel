@@ -1,5 +1,6 @@
 """This file contains the User object for the database"""
 from flask_login import UserMixin
+
 from database import db
 
 

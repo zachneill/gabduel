@@ -1,15 +1,15 @@
-{% extends "base.html" %}
+{% extends "extra/base.html" %}
 {% from 'bootstrap5/form.html' import render_form %}
 {% set title = "Login" %}
 {% block scripts %}
-  {{super()}}
+    {{ super() }}
 {% endblock %}
 
 {% block app_content %}
-  <div class="form-wrapper">
-    <br class="mt-5 pt-5"/>
-    <br class="mt-5 pt-5"/>
-    {{ render_form(form) }}
-  <a class="btn btn-secondary mt-5" href="{{url_for('auth.signup')}}">Sign Up</a>
-  </div>
+    <div class="form-wrapper">
+        <br class="mt-5 pt-5"/>
+        <br class="mt-5 pt-5"/>
+        {{ render_form(form) }}
+        <a class="btn btn-secondary mt-5" href="{{ url_for('auth.signup') }}">Sign Up</a>
+    </div>
 {% endblock %}

@@ -5,7 +5,7 @@ import os
 import secrets
 from os import path
 
-from flask import Flask
+from flask import Flask, redirect
 from flask_bootstrap import Bootstrap5
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
@@ -45,5 +45,21 @@ def create_app():
     # Register blueprints
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+
+    # Custom page error handlers
+    @app.errorhandler(404)
+    def page_not_found(e):
+        print("Errored with: ", e)
+        return redirect('/404')
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        print("Errored with: ", e)
+        return redirect('/500')
+
+    @app.errorhandler(405)
+    def method_not_allowed(e):
+        print("Errored with: ", e)
+        return redirect('/405')
 
     return app

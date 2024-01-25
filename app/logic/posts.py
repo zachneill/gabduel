@@ -1,3 +1,4 @@
+"""This file contains the logic functions for the posts"""
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
 from app.models.objects.post import Post

@@ -1,4 +1,4 @@
-"""This file contains the tests for the posts logic functions"""
+"""This file contains the unit tests for the posts logic functions"""
 import pytest
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 

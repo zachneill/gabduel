@@ -1,16 +1,17 @@
+"""This file contains the logic for functions related to accounts"""
 from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.models.objects.user import User
 from database import db
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 def createUser(data):
     """Create a new user"""
     try:
         newUser = User(email=data['email'], firstName=data['firstName'], lastName=data['lastName'],
-                   username=data['username'], password=generate_password_hash(data['password'], method='scrypt'),
-                   isAdmin=data['isAdmin'])
+                       username=data['username'], password=generate_password_hash(data['password'], method='scrypt'),
+                       isAdmin=data['isAdmin'])
         db.session.add(newUser)
         db.session.commit()
     except Exception as e:

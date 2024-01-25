@@ -9,14 +9,14 @@ $(document).ready(function () {
 
 function deletePost(postId) {
     // Delete post
-    $.ajax( "/delete", {
+    $.ajax("/delete", {
         method: "POST",
-        data: { postId: postId },
-        success: function() {
+        data: {postId: postId},
+        success: function () {
             // Reloads page if successful
             location.reload()
         },
-        error: function(error) {
+        error: function (error) {
             // Logs error to console if unsuccessful
             console.log(error["responseText"]);
         }

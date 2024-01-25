@@ -1,3 +1,4 @@
+"""This file contains the functional tests for the auth routes"""
 import pytest
 from flask import url_for
 

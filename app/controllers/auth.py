@@ -1,13 +1,14 @@
+"""This file contains the routes for the login/signup abilities, post CRUD, and admin abilities"""
 from flask import Blueprint, render_template, flash, url_for, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 
-from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUserById, getUsers, \
+from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUsers, \
     makeAdmin
 from app.logic.posts import createPost, getPostById, updatePost, deletePost
+from app.models.forms.AdminForm import AdminForm
 from app.models.forms.LoginForm import LoginForm
 from app.models.forms.PostForm import PostForm
 from app.models.forms.SignupForm import SignupForm
-from app.models.forms.AdminForm import AdminForm
 
 auth = Blueprint('auth', __name__)
 

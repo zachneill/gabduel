@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{% extends "extra/base.html" %}
 {% from 'bootstrap5/form.html' import render_form %}
 {% set title = "Sign Up" %}
 {% block scripts %}
-  {{super()}}
+    {{ super() }}
 {% endblock %}
 
 {% block app_content %}
-  <div class="form-wrapper">
-    <br class="mt-5 pt-5"/>
-    <br class="mt-5 pt-5"/>
-    {{ render_form(form) }}
-  </div>
+    <div class="form-wrapper">
+        <br class="mt-5 pt-5"/>
+        <br class="mt-5 pt-5"/>
+        {{ render_form(form) }}
+    </div>
 {% endblock %}

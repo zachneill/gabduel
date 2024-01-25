@@ -1,4 +1,4 @@
-"""This file contains the tests for the accounts logic functions"""
+"""This file contains the unit tests for the accounts logic functions"""
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
 

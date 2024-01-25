@@ -1,15 +1,15 @@
 {% extends "extra/base.html" %}
-{% from 'bootstrap5/form.html' import render_form %}
-{% set title = "Post" %}
+{% set title = "405" %}
 {% block scripts %}
     {{ super() }}
 {% endblock %}
 
 {% block app_content %}
     <div class="mt-5 text-center">
-        <h1>{{ "Update " + post.title if post else "Create a Post" }}</h1>
+        <h1>405 Method Not Allowed</h1>
+        <h5 class="mt-5 pt-5">It looks like the method you requested wasn't supported.</h5>
         <br class="mt-5 pt-5"/>
         <br class="mt-5 pt-5"/>
-        {{ render_form(form) }}
+        <a class="btn btn-primary" href="/">Back to Home</a>
     </div>
 {% endblock %}
