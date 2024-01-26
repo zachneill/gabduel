@@ -36,7 +36,7 @@ def login():
             # If the user does not exist
             flash(f'No account exists for {form.email.data}', 'danger')
             return redirect('/login')
-    return render_template("login.html", form=form, user=current_user)
+    return render_template("login.html", form=form)
 
 
 @auth.route('/signup', methods=['GET', 'POST'])
@@ -68,7 +68,7 @@ def signup():
             flash(f'Account created for {form.firstName.data}!', 'success')
             return redirect("/home")
 
-    return render_template("signup.html", form=form, user=current_user)
+    return render_template("signup.html", form=form)
 
 
 @auth.route('/logout', methods=['GET'])
@@ -91,7 +91,7 @@ def create():
         createPost({"content": form.content.data, "title": form.title.data, "author": current_user.id})
         flash('Post created!', 'success')
         return redirect('/home')
-    return render_template("post.html", form=form, user=current_user, post=None)
+    return render_template("post.html", form=form, post=None)
 
 
 @auth.route('/post/<postId>', methods=['GET', 'POST'])
@@ -111,7 +111,7 @@ def update(postId):
         flash('Post updated!', 'success')
         return redirect('/home')
 
-    return render_template("post.html", form=form, user=current_user, post=post)
+    return render_template("post.html", form=form, post=post)
 
 
 @auth.route('/delete', methods=['POST'])
@@ -148,4 +148,4 @@ def admin():
     else:
         # Set up table for jinja display
         allUsers = getUsers()
-    return render_template("admin.html", form=form, current_user=current_user, allUsers=allUsers)
+    return render_template("admin.html", form=form, allUsers=allUsers)
