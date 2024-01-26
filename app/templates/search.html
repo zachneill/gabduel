@@ -1,6 +1,6 @@
 {% extends "extra/base.html" %}
 {% from 'bootstrap5/form.html' import render_form %}
-{% set title = "Home" %}
+{% set title = "Search Results" %}
 {% block scripts %}
     {{ super() }}
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
@@ -8,7 +8,7 @@
 
 {% block app_content %}
     <div class="mt-5 text-center">
-        <h1>This is Folks Gab/Duel</h1>
+        <h1>Search Results</h1>
         <br>
         <form class="form-inline"  method="POST">
             {{ form.hidden_tag() }}
@@ -53,21 +53,24 @@
                 <br>
             {% endfor %}
         </div>
-    <nav aria-label="Page navigation">
-  <ul class="my-3 pagination justify-content-center">
-    <li class="page-item d-none d-md-block {{ disabled if not pages.has_prev }}">
-        <a class="page-link border-0 bg-dark text-white" href="{{ url_for("views.home", page=pages.prev_num) }}" >Previous</a>
-    </li>
-    {%  for page in pages.iter_pages(left_current=1, right_current=2) %}
-        <li class="page-item {{ 'active' if page == pages.page }}">
-            <a class="page-link border-0" href="./?page={{ page }}">{{ page if page else "..." }}</a>
-        </li>
-    {% endfor %}
-    <li class="page-item d-none d-md-block {{ disabled if not pages.has_next }}">
-        <a class="page-link border-0 bg-dark text-white" href="{{ url_for('views.home', page=pages.next_num) }}">Next</a>
-    </li>
+        <nav aria-label="Page navigation">
+        <ul class="my-3 pagination justify-content-center">
+            <li class="page-item d-none d-md-block">
+                <a class="page-link border-0 bg-dark text-white {{ 'disabled' if not pages.has_prev }}"
+                   href="{{ url_for("views.search", page=pages.prev_num, query=query) }}" >Previous</a>
+            </li>
+            {% for page in pages.iter_pages(left_current=1, right_current=2) %}
+                <li class="page-item {{ 'active' if page == pages.page }}">
+                    <a class="page-link border-0"
+                       href="{{ url_for('views.search', page=page, query=query) }}">{{ page if page else "..." }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item d-none d-md-block">
+                <a class="page-link border-0 bg-dark text-white {{ 'disabled' if not pages.has_next }}"
+                   href="{{ url_for('views.search', page=pages.next_num, query=query) }}">Next</a>
+            </li>
 
-  </ul>
-</nav>
+        </ul>
+        </nav>
     </div>
 {% endblock %}

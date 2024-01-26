@@ -6,12 +6,18 @@ from wtforms.validators import DataRequired, Length
 
 class SignupForm(FlaskForm):
     """Signup Form for signup.html page"""
-    firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=30)])
-    lastName = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=30)])
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=30)])
-    email = EmailField('Email', validators=[DataRequired(), Length(min=2, max=80)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=50)])
-    confirmPassword = PasswordField('Confirm Password',
-                                    validators=[DataRequired(), Length(min=2, max=50)])
+    firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=30)],
+                            render_kw={'autofocus': True, 'placeholder': 'First Name'})
+    lastName = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=30)],
+                           render_kw={'placeholder': 'Last Name'})
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=30)],
+                           render_kw={'placeholder': 'Username'})
+    email = EmailField('Email', validators=[DataRequired(), Length(min=2, max=80)],
+                       render_kw={'placeholder': 'Email'})
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=50)],
+                             render_kw={'placeholder': 'Password'})
+    confirmPassword = PasswordField('Confirm Password', validators=[DataRequired(),
+                                                                    Length(min=2, max=50)],
+                                    render_kw={'placeholder': 'Confirm Password'})
     rememberMe = BooleanField('Remember Me', default=False)
-    submit = SubmitField('Sign Up')
+    submit = SubmitField('Sign Up', render_kw={'class': 'btn btn-success'})

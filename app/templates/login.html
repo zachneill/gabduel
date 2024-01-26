@@ -6,10 +6,21 @@
 {% endblock %}
 
 {% block app_content %}
-    <div class="form-wrapper">
+    <div class="text-center">
         <br class="mt-5 pt-5"/>
         <br class="mt-5 pt-5"/>
-        {{ render_form(form) }}
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.login.label(class="form-label float-start") }}
+            {{ form.login(class="form-control mb-3") }}
+            {{ form.password.label(class="form-label float-start") }}
+            {{ form.password(class="form-control mb-3") }}
+            <div class="form-check">
+                {{ form.rememberMe(class="form-check-input") }}
+                {{ form.rememberMe.label(class="form-check-label float-start") }}
+            </div>
+            {{ form.submit(class="btn btn-success") }}
+        </form>
         <a class="btn btn-secondary mt-5" href="{{ url_for('auth.signup') }}">Sign Up</a>
     </div>
 {% endblock %}

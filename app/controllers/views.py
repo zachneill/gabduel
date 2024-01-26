@@ -1,22 +1,48 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
 
-from app.logic.posts import getPosts
+from app.logic.posts import getPosts, getSearchResults
+from app.models.forms.SearchForm import SearchForm
 
 views = Blueprint('views', __name__)
 
 
 @views.route('/')
-@views.route('/home')
+@views.route('/home', methods=['GET', 'POST'])
 def home():
     """Render the home page"""
+    # Get the posts
     posts = getPosts()
-    return render_template("home.html", posts=posts)
+    # Paginate the posts
+    page = request.args.get('page', 1, type=int)
+    pages = posts.paginate(page=page, per_page=5)
+    # Add the search bar
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for('views.search', query=form.search.data))
+
+    return render_template("home.html", posts=posts, pages=pages, form=form)
 
 
 @views.route('/about')
 def about():
     """Render the about page"""
     return render_template("about.html")
+
+
+@views.route('/search/<query>', methods=['GET', 'POST'])
+def search(query):
+    """Render the search page"""
+    # Get the posts
+    posts = getSearchResults(query)
+    # Paginate the posts
+    page = request.args.get('page', 1, type=int)
+    pages = posts.paginate(page=page, per_page=10)
+    # Add the search bar
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for('views.search', query=form.search.data))
+
+    return render_template("search.html", posts=posts, pages=pages, form=form, query=query)
 
 
 @views.route('/404')

@@ -1,0 +1,18 @@
+body {
+    background-color: darkseagreen;
+}
+.indent {
+    text-indent: 25px;
+}
+.pagination > li > a
+{
+    color: white;
+    background-color: #212529;
+    border: none;
+}
+.pagination > .active > a
+{
+    color: #212529;
+    background-color: white;
+    border: none;
+}

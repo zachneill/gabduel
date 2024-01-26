@@ -20,7 +20,7 @@ def createPost(data):
 
 def getPosts():
     """Get all posts, sorted newest to oldest"""
-    return Post.query.order_by(Post.date.desc()).all()
+    return Post.query.order_by(Post.date.desc())
 
 
 def getPostById(postId):
@@ -53,3 +53,8 @@ def deletePost(data):
         raise NoResultFound
 
     return post
+
+
+def getSearchResults(query):
+    """Get the search results"""
+    return Post.query.filter(Post.title.contains(query) | Post.content.contains(query)).order_by(Post.date.desc())

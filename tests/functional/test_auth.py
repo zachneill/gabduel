@@ -54,24 +54,24 @@ def test_login(app, secondUser, unitContext):
 
             # Test no account exists with email
             response = testingClient.post(url_for('auth.login'),
-                                          data=dict(email="fake@email.com,", password="password"),
+                                          data=dict(login="fake@email.com", password="password"),
                                           follow_redirects=True)
             assert response.status_code == 200
             assert b"No account exists" in response.data
 
         # Test bad password
         response = testingClient.post(url_for('auth.login'),
-                                      data=dict(email=secondUser.email, password="wrong"),
+                                      data=dict(login=secondUser.email, password="wrong"),
                                       follow_redirects=True)
         assert response.status_code == 200
         assert b"Incorrect password for" in response.data
 
         # Test login success
         response = testingClient.post(url_for('auth.login'),
-                                      data=dict(email=secondUser.email, password="password"),
+                                      data=dict(login=secondUser.email, password="password"),
                                       follow_redirects=True)
         assert response.status_code == 200
-        assert b"This is the Flask Blog" in response.data
+        assert b"This is Folks Gab/Duel" in response.data
 
 
 @pytest.mark.usefixtures("authenticated_request")
@@ -80,7 +80,7 @@ def test_already_logged_in(app, newUser):
     with app.test_client() as testingClient:
         response = testingClient.get(url_for('auth.login'), follow_redirects=True)
         assert response.status_code == 200
-        assert b'This is the Flask Blog' in response.data
+        assert b'This is Folks Gab/Duel' in response.data
 
 
 @pytest.mark.usefixtures("authenticated_request")
@@ -117,7 +117,7 @@ def test_update(app):
     """Test the update page."""
     with app.test_client() as testingClient:
         # Send a GET request to the application
-        response = testingClient.get('/post/1')
+        response = testingClient.get('/post/1', follow_redirects=True)
         assert response.status_code == 200
         assert b'Update' in response.data
 
@@ -133,7 +133,7 @@ def test_delete(app, newPost):
         # Establish an application context before running the tests
         response = testingClient.post('/delete', data={'postId': newPost.id}, follow_redirects=True)
         assert response.status_code == 200
-        assert b'This is the Flask Blog' in response.data
+        assert b'This is Folks Gab/Duel' in response.data
         assert b'title1' not in response.data
 
 

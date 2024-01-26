@@ -22,7 +22,9 @@ def login():
 
     # Check if the form is valid
     if form.validate_on_submit():
-        user = getUserByEmail(form.email.data)
+        user = getUserByEmail(form.login.data)
+        if not user:
+            user = getUserByUsername(form.login.data)
         if user:
             # Check if the password is correct
             if checkPassword(user.password, form.password.data):
@@ -30,11 +32,11 @@ def login():
                 login_user(user, remember=form.rememberMe.data)
                 return redirect('/home')
             else:
-                flash(f'Incorrect password for {form.email.data}', 'danger')
+                flash(f'Incorrect password for {form.login.data}', 'danger')
                 return redirect('/login')
         else:
             # If the user does not exist
-            flash(f'No account exists for {form.email.data}', 'danger')
+            flash(f'No account exists for {form.login.data}', 'danger')
             return redirect('/login')
     return render_template("login.html", form=form)
 
@@ -71,7 +73,7 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@auth.route('/logout', methods=['GET'])
+@auth.route('/logout')
 @login_required
 def logout():
     """Logout route"""
