@@ -11,13 +11,13 @@ def createPost(data):
     try:
         newPost = Post(title=data['title'], content=data['content'])
         db.session.add(newPost)
-        author1 = User.query.get(data['authors'][0])
-        author2 = User.query.get(data['authors'][1])
+        author1 = db.session.get(User, data['authors'][0])
+        author2 = db.session.get(User, data['authors'][1])
         newPost.authors.append(author1)
         newPost.authors.append(author2)
         db.session.commit()
     except Exception as e:
-        print("Failed to create post with error", e)
+        print("Failed to create post with error: ", e)
         raise SQLAlchemyError
 
     return newPost
@@ -36,12 +36,17 @@ def getPostById(postId):
 def updatePost(data):
     """Update a post"""
     try:
-        post = Post.query.filter_by(id=data['id']).first()
+        post = db.session.get(Post, data['id'])
         post.title = data['title']
         post.content = data['content']
+        author1 = db.session.get(User, data['authors'][0])
+        author2 = db.session.get(User, data['authors'][1])
+        post.authors.clear()
+        post.authors.append(author1)
+        post.authors.append(author2)
         db.session.commit()
     except Exception as e:
-        print("Failed to update post with error", e)
+        print("Failed to update post with error: ", e)
         raise NoResultFound
 
     return post
@@ -54,7 +59,7 @@ def deletePost(data):
         db.session.delete(post)
         db.session.commit()
     except Exception as e:
-        print("Failed to delete post with error", e)
+        print("Failed to delete post with error: ", e)
         raise NoResultFound
 
     return post

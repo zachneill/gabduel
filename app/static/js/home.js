@@ -2,7 +2,7 @@ $(document).ready(function () {
     // Set CSRF token to avoid CSRF error when deleting post
     $.ajaxSetup({
         headers: {
-            "X-CSRFToken": $("#delete").data("csrf")
+            "X-CSRFToken": $("#deleteButton").data("csrf")
         }
     });
 });

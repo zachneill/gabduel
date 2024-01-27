@@ -1,22 +1,29 @@
+import os
 import random
-
-from faker import Faker
 
 from app import create_app
 from app.models.objects.post import Post
 from app.models.objects.user import User
 from database import db
 
+from faker import Faker
+
+print('Removing old avatars...')
+for file in os.listdir("./app/static/images/avatars"):
+    os.remove(os.path.join("./app/static/images/avatars", file))
+
 fake = Faker()
 numUsers = 100
 numPosts = numUsers * 8
 
 app = create_app()
-with app.app_context():
+with app.app_context(), app.test_request_context():
+    print('Dropping and creating new database...')
     db.drop_all()
     db.create_all()
     shuffledUsers = list(range(numUsers))
     random.shuffle(shuffledUsers)
+    print('Creating new users...')
     for i in range(len(shuffledUsers)):
         profile = fake.simple_profile()
         if profile["sex"] == "M":
@@ -34,7 +41,7 @@ with app.app_context():
         )
         db.session.add(user)
         db.session.commit()
-
+    print('Creating new posts...')
     for i in range(numPosts):
         post = Post(
             title=fake.sentence(),
@@ -43,12 +50,12 @@ with app.app_context():
         )
         db.session.add(post)
         db.session.commit()
-
+    print('Linking authors to posts...')
     for i in range(numPosts):
-        post = Post.query.get(i + 1)
-        author1 = User.query.get(random.randint(1, numUsers))
+        post = db.session.get(Post, i + 1)
+        author1 = db.session.get(User, random.randint(1, numUsers))
         while True:
-            author2 = User.query.get(random.randint(1, numUsers))
+            author2 = db.session.get(User, random.randint(1, numUsers))
             if author1 != author2:
                 break
         post.authors.append(author1)
@@ -56,5 +63,5 @@ with app.app_context():
         db.session.commit()
 
     db.session.close()
-    print("\nDatabase updated successfully!\n")
-    exit()
+print("Database updated successfully!")
+exit()

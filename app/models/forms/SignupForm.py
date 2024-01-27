@@ -1,5 +1,6 @@
 """This file contains the SignupForm object in the /signup route"""
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
 from wtforms.fields.simple import StringField, PasswordField, SubmitField, EmailField, BooleanField
 from wtforms.validators import DataRequired, Length
 
@@ -19,5 +20,6 @@ class SignupForm(FlaskForm):
     confirmPassword = PasswordField('Confirm Password', validators=[DataRequired(),
                                                                     Length(min=2, max=50)],
                                     render_kw={'placeholder': 'Confirm Password'})
+    image = FileField('Profile photo (not required)',)
     rememberMe = BooleanField('Remember Me', default=False)
     submit = SubmitField('Sign Up', render_kw={'class': 'btn btn-success'})

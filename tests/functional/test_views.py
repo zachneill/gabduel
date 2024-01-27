@@ -10,7 +10,7 @@ def test_about(app):
         with app.app_context():
             response = testingClient.get(url_for('views.about'), follow_redirects=True)
             assert response.status_code == 200
-            assert b'Folks Gab/Duel is an established organization' in response.data
+            assert b'combines casual discussion' in response.data
 
 
 def test_home(app):

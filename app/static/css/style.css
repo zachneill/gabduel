@@ -4,15 +4,17 @@ body {
 .indent {
     text-indent: 25px;
 }
-.pagination > li > a
-{
+.pagination > li > a {
     color: white;
     background-color: #212529;
     border: none;
 }
-.pagination > .active > a
-{
+.pagination > .active > a {
     color: #212529;
     background-color: white;
     border: none;
+}
+.image {
+    max-width: 200px;
+    max-height: 200px;
 }

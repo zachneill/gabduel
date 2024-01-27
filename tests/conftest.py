@@ -17,17 +17,20 @@ def app():
 
 
 @pytest.fixture(autouse=True, scope='module')
-def unitContext(app, newUser, secondUser, newPost, secondPost, adminUser):
+def unitContext(app, newUser, secondUser, newPost, secondPost, adminUser, thirdUser):
     """Fixture for functional tests. Creates a test client for the application."""
     with app.test_client() as testingClient:
         # Establish an application context before running the tests
         with app.app_context():
+            db.drop_all()
             db.create_all()
             db.session.add(newUser)
             db.session.add(secondUser)
+            db.session.add(thirdUser)
             db.session.add(adminUser)
             db.session.add(newPost)
             db.session.add(secondPost)
+            db.session.commit()
             yield testingClient
             db.drop_all()
 
@@ -44,6 +47,7 @@ def newUser(app):
         user.username = 'username'
         user.password = 'password'
         user.isAdmin = False
+        user.image = 'tests/testImage.png'
         db.session.add(user)
     return user
 
@@ -60,6 +64,24 @@ def secondUser(app):
         user.username = 'username2'
         user.password = 'scrypt:32768:8:1$fajWmZeuTbMKdz7r$609c9395583ceffcdd714c5656794cb7c088de2af874cdb898c75d1c17145b1f8c03878bcd800435026fcf5989f6373a4b7f8b046d2f6c17810662842a3ecafc'
         user.isAdmin = False
+        user.image = 'tests/testImage.png'
+        db.session.add(user)
+    return user
+
+
+@pytest.fixture(scope='module')
+def thirdUser(app):
+    """For authors related tests, where needed."""
+    with app.app_context():
+        user = Users()
+        user.id = 100
+        user.email = 'author@email.com'
+        user.firstName = 'FN'
+        user.lastName = 'LN'
+        user.username = 'author'
+        user.password = 'pwd'
+        user.isAdmin = False
+        user.image = 'tests/testImage.png'
         db.session.add(user)
     return user
 
@@ -69,39 +91,43 @@ def adminUser(app):
     """For when an admin user is needed."""
     with app.app_context():
         user = Users()
-        user.id = 100
+        user.id = 101
         user.email = 'admin@email.com'
         user.firstName = 'FN'
         user.lastName = 'LN'
         user.username = 'admin'
         user.password = 'password'
         user.isAdmin = True
+        user.image = 'tests/testImage.png'
         db.session.add(user)
     return user
 
 
 @pytest.fixture(scope='module')
-def newPost(app, newUser):
+def newPost(app, newUser, secondUser):
     """Fixture for unit tests. Creates a new post object."""
     with app.app_context():
         """Fixture for unit tests. Creates a new post object."""
         post = Post()
+        post.id = 1
         post.title = 'title1'
         post.content = 'content1'
-        post.author = newUser.id
-        db.session.add(post)
+        post.authors.append(newUser)
+        post.authors.append(secondUser)
     return post
 
 
 @pytest.fixture(scope='module')
-def secondPost(app, secondUser):
+def secondPost(app, secondUser, thirdUser):
     """For when two posts are needed."""
     with app.app_context():
         post = Post()
+        post.id = 2
         post.title = 'title2'
         post.content = 'content2'
-        post.author = secondUser.id
         db.session.add(post)
+        post.authors.append(secondUser)
+        post.authors.append(thirdUser)
     return post
 
 
@@ -114,6 +140,6 @@ def authenticated_request(app, newUser):
 
 @pytest.fixture
 def admin_authenticated_request(app, adminUser):
-    """Fixture for functional tests. Used as a decorator to log in."""
+    """Fixture for functional tests. Used as a decorator to log in as an admin."""
     with app.test_request_context():
         yield flask_login.login_user(adminUser)

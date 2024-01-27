@@ -1,7 +1,12 @@
 """This file contains the logic for functions related to accounts"""
-from sqlalchemy import and_, func
+import os
+import random
+
+from flask import url_for
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 from app.models.objects.post import Post
 from app.models.objects.user import User
@@ -11,13 +16,21 @@ from database import db
 def createUser(data):
     """Create a new user"""
     try:
+        # Save the image to the static folder
+        if data['image']:
+            data['image'].save(os.path.join('app/static/images/avatars', secure_filename(data['username'] + '.png')))
+            filename = url_for('static', filename='images/avatars/' + data['username'] + '.png')
+        else:
+            # If no image is provided, use the dicebear API to generate an avatar
+            filename = f'https://api.dicebear.com/7.x/micah/svg?seed={random.seed(5)}&mouth=smile&eyes=smiling'
+
         newUser = User(email=data['email'], firstName=data['firstName'], lastName=data['lastName'],
                        username=data['username'], password=generate_password_hash(data['password'], method='scrypt'),
-                       isAdmin=data['isAdmin'])
+                       isAdmin=data['isAdmin'], image=filename)
         db.session.add(newUser)
         db.session.commit()
     except Exception as e:
-        print("Failed to create user with error", e)
+        print("Failed to create user with error: ", e)
         raise SQLAlchemyError
     return newUser
 
@@ -39,7 +52,7 @@ def getUserByUsername(username):
 
 def getUserById(userId):
     """Get a user by their id"""
-    return User.query.filter_by(id=userId).first()
+    return db.session.get(User, userId)
 
 
 def getUsers():
@@ -48,7 +61,7 @@ def getUsers():
 
 
 def makeAdmin(userId):
-    user = getUserById(userId)
+    user = db.session.get(User, userId)
     user.isAdmin = True
     db.session.commit()
     return user

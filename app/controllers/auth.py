@@ -1,6 +1,7 @@
 """This file contains the routes for the login/signup abilities, post CRUD, and admin abilities"""
 from flask import Blueprint, render_template, flash, url_for, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
+from werkzeug.utils import secure_filename
 
 from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUsers, \
     makeAdmin
@@ -44,7 +45,7 @@ def login():
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
     """Signup route"""
-    # Check if the user is already logged in
+    # Redirects user off this route if already signed up
     if current_user.is_authenticated:
         return redirect('/home')
 
@@ -65,7 +66,7 @@ def signup():
             # Create the user
             user = createUser({"email": form.email.data, "firstName": form.firstName.data,
                                "lastName": form.lastName.data, "username": form.username.data,
-                               "password": form.password.data, "isAdmin": False})
+                               "password": form.password.data, "isAdmin": False, "image": form.image.data})
             login_user(user, remember=form.rememberMe.data)
             flash(f'Account created for {form.firstName.data}!', 'success')
             return redirect("/home")
@@ -89,13 +90,13 @@ def create():
     form = PostForm()
     # Populate the choice of other author
     users = getUsers()
-    form.authors.choices = [(user.id, f"{user.firstName} {user.lastName} ({user.username})")
-                            for user in users if user.id != current_user.id]
+    form.otherAuthor.choices = [(user.id, f"{user.firstName} {user.lastName} ({user.username})")
+                                for user in users if user.id != current_user.id]
     # Check if the form is valid
     if form.validate_on_submit():
         # Create the post
         createPost({"content": form.content.data, "title": form.title.data,
-                    "authors": [current_user.id, form.authors.data]})
+                    "authors": [current_user.id, form.otherAuthor.data]})
         flash('Post created!', 'success')
         return redirect('/home')
     return render_template("post.html", form=form, post=None)
@@ -107,14 +108,21 @@ def update(postId):
     """Update post route"""
     # Check if the user is the author of the post
     post = getPostById(postId)
-    if not post or post.author != current_user.id or post.author2 != current_user.id:
+    users = getUsers()
+    if not post or current_user not in post.authors:
         flash('You are not the author of this post.', 'danger')
         return redirect('/home')
-    form = PostForm(obj=post)
+    form = PostForm(content=post.content, title=post.title,
+                    otherAuthor=str(post.authors[1].id)
+                    if post.authors[1] != current_user
+                    else str(post.authors[0].id))
+    form.otherAuthor.choices = [(user.id, f"{user.firstName} {user.lastName} ({user.username})")
+                                for user in users if user.id != current_user.id]
     # Check if the form is valid
     if form.validate_on_submit():
         # Update the post
-        updatePost({"id": postId, "content": form.content.data, "title": form.title.data})
+        updatePost({"id": postId, "content": form.content.data, "title": form.title.data, "authors":
+                    [current_user.id, form.otherAuthor.data]})
         flash('Post updated!', 'success')
         return redirect('/home')
 
@@ -129,10 +137,11 @@ def delete():
     postId = int(request.form['postId'])
     post = getPostById(postId)
     # Check if the form is valid
-    if post.author1 == current_user.id or post.author2 == current_user.id:
+    if current_user in post.authors:
         # Delete the post
         deletePost({"id": postId})
     else:
+        flash('You can\'t delete someone else\'s post.', 'danger')
         print('User is not the author')
     return redirect('/home')
 

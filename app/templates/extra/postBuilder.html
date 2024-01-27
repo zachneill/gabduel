@@ -1,5 +1,5 @@
 <div class="row row-cols-auto justify-content-center g-4 text-center">
-    {% for post in posts %}
+    {% for post in pages %}
         <div class="col">
             <div class="card text-white bg-dark">
                 <div class="card-body">
@@ -9,19 +9,21 @@
                             {{ post.authors[1].firstName }} {{ post.authors[1].lastName }}
                             on {{ post.date.strftime('%m/%d/%Y') }}
                         </p>
-                        <a type="button" href="/post/{{ post.id }}">
-                            <span class="fa fa-2x fa-pencil-square-o
-                                {{ 'd-none' if current_user.id not in post.authors }}"
-                                  aria-hidden="true">
-                            </span>
-                        </a>
-                        <button type="button" onclick="deletePost({{ post.id }})" data-csrf="{{ csrf_token() }}"
-                                class="bg-transparent border-0
-                                {{ 'd-none' if current_user.id not in post.authors}}" id="delete">
-                            <span class="fa fa-2x fa-trash-o text-white
-                                {{ 'd-none' if current_user.id not in post.authors }}"
-                                  aria-hidden="true"></span>
-                        </button>
+                        <div class="float-end">
+                            <a type="button" class="bg-transparent border-0 btn btn-sm m-0 p-0" href="/post/{{ post.id }}">
+                                <span class="fa fa-2x fa-pencil-square-o text-white
+                                    {{ 'd-none' if current_user not in post.authors }}"
+                                      aria-hidden="true">
+                                </span>
+                            </a>
+                            <button type="button" onclick="deletePost({{ post.id }})" data-csrf="{{ csrf_token() }}"
+                                    class="bg-transparent border-0 btn btn-sm mt-0 pt-0
+                                    {{ 'd-none' if current_user not in post.authors}}" id = "deleteButton">
+                                <span class="fa fa-2x fa-trash-o text-white
+                                    {{ 'd-none' if current_user not in post.authors }}"
+                                      aria-hidden="true"></span>
+                            </button>
+                        </div>
                     </div>
                     <h3 class="card-title">{{ post.title }}</h3>
                     <p class="card-text text-start indent">{{ post.content }}</p>

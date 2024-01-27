@@ -12,13 +12,14 @@
         <br class="mt-5 pt-5"/>
         <form method="POST">
             {{ form.hidden_tag() }}
-            {{ form.authors.label(class="form-label float-start") }}
-            {{ form.authors(class="form-control mb-3") }}
+            {{ form.otherAuthor.label(class="form-label float-start") }}
+            {{ form.otherAuthor(class="form-control mb-3") }}
             {{ form.title.label(class="form-label float-start") }}
             {{ form.title(class="form-control mb-3") }}
             {{ form.content.label(class="form-label float-start") }}
             {{ form.content(class="form-control mb-3") }}
             {{ form.submit(class="btn btn-success") }}
+            <a href="{{ url_for('views.home') }}" class="btn btn-secondary">Cancel</a>
 
         </form>
     </div>

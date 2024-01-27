@@ -40,7 +40,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ author.firstName }} {{ author.lastName }}</h5>
                         </div>
-                        <img src="{{ author.image }}" class="card-img" alt="avatar{{ author.id }}">
+                        <img src="{{ author.image if author.image.startswith("https://") else author.image }}" class="card-img image" alt="avatar{{ author.id }}">
                     </div>
                 </div>
                 <br>

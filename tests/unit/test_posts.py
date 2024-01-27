@@ -5,28 +5,28 @@ from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 from app.logic.posts import createPost, getPosts, getPostById, updatePost, deletePost
 
 
-def test_createPost(newUser, unitContext):
+def test_createPost(newUser, secondUser, unitContext):
     """Test the createPost function
         It should create a new post with the correct attributes
     """
     # Create a test post
-    post = createPost({'title': 'title', 'content': 'content', 'author': newUser.id})
+    post = createPost({'title': 'title', 'content': 'content', 'authors': [newUser.id, secondUser.id]})
     # Check the attributes
     assert post.title == 'title'
     assert post.content == 'content'
-    assert post.author == newUser.id
+    assert post.authors == [newUser, secondUser]
 
 
-def test_createPostNoAttributes(newUser, unitContext):
+def test_createPostNoAttributes(newUser, unitContext, secondUser):
     """Test the createPost function
         It should not create a new post if not enough attributes are provided
     """
     # Test with no title
     with pytest.raises(SQLAlchemyError):
-        createPost({'content': 'content', 'author': newUser.id})
+        createPost({'content': 'content', 'authors': [newUser.id, secondUser.id]})
     # Test with no content
     with pytest.raises(SQLAlchemyError):
-        createPost({'title': 'title', 'author': newUser.id})
+        createPost({'title': 'title', 'authors': [newUser.id, secondUser.id]})
     # Test with no author
     with pytest.raises(SQLAlchemyError):
         createPost({'title': 'title', 'content': 'content'})
@@ -37,8 +37,9 @@ def test_getPosts(newPost, secondPost):
         It should return a list of all posts
     """
     # Check the returned list contains the fixture posts
-    assert newPost in getPosts()
-    assert secondPost in getPosts()
+    posts = getPosts()
+    assert newPost in posts
+    assert secondPost in posts
 
 
 def test_getPostById(newPost):
@@ -51,16 +52,17 @@ def test_getPostById(newPost):
     assert not getPostById(0)
 
 
-def test_updatePost(newPost):
+def test_updatePost(newPost, newUser, thirdUser, unitContext):
     """Test the updatePost function
         It should update the post with the correct attributes
     """
     # Update the post
-    post = updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content'})
+    post = updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content',
+                       'authors': [newUser.id, thirdUser.id]})
     # Check the attributes
     assert post.title == 'new title'
     assert post.content == 'new content'
-    assert post.author == newPost.author
+    assert post.authors == [newUser, thirdUser]
 
 
 def test_updatePostNoAttributes(newPost):
@@ -69,13 +71,16 @@ def test_updatePostNoAttributes(newPost):
     """
     # Test with no id
     with pytest.raises(NoResultFound):
-        updatePost({'title': 'new title', 'content': 'new content'})
+        updatePost({'title': 'new title', 'content': 'new content', 'authors': [98, 99]})
     # Test with no title
     with pytest.raises(NoResultFound):
-        updatePost({'id': newPost.id, 'content': 'new content'})
+        updatePost({'id': newPost.id, 'content': 'new content', 'authors': [98, 99]})
     # Test with no content
     with pytest.raises(NoResultFound):
-        updatePost({'id': newPost.id, 'title': 'new title'})
+        updatePost({'id': newPost.id, 'title': 'new title', 'authors': [98, 99]})
+    # Test with no authors
+    with pytest.raises(NoResultFound):
+        updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content'})
 
 
 def test_deletePost(newPost, unitContext):

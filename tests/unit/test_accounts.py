@@ -2,7 +2,8 @@
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
-from app.logic.accounts import createUser, checkPassword, getUserByEmail, getUserByUsername, getUserById, getUsers
+from app.logic.accounts import createUser, checkPassword, getUserByEmail, getUserByUsername, getUserById, getUsers, \
+    makeAdmin
 from database import db
 
 
@@ -23,7 +24,7 @@ def test_createUser(unitContext):
     # Create a test user
     user = createUser(
         {'email': 'email3@email.com', 'firstName': 'FN', 'lastName': 'LN', 'username': 'username3',
-         'password': 'password', 'isAdmin': False})
+         'password': 'password', 'isAdmin': False, 'image': None})
     # Check the attributes
     assert user.email == 'email3@email.com'
     assert user.firstName == 'FN'
@@ -42,32 +43,37 @@ def test_createUserNoAttributes(newUser):
     with pytest.raises(SQLAlchemyError):
         createUser(
             {'firstName': 'FN', 'lastName': 'LN', 'username': 'username', 'password': 'password',
-             'isAdmin': False})
+             'isAdmin': False, 'image': None})
     # Test with no first name
     with pytest.raises(SQLAlchemyError):
         createUser(
             {'email': "abc@abc.com", 'lastName': 'LN', 'username': 'username', 'password': 'password',
-             'isAdmin': False})
+             'isAdmin': False, 'image': None})
     # Test with no last name
     with pytest.raises(SQLAlchemyError):
         createUser(
             {'email': "abc@abc.com", 'firstName': 'FN', 'username': 'username', 'password': 'password',
-             'isAdmin': False})
+             'isAdmin': False, 'image': None})
     # Test with no username
     with pytest.raises(SQLAlchemyError):
         createUser(
             {'email': "abc@abc.com", 'firstName': 'FN', 'lastName': 'LN', 'password': 'password',
-             'isAdmin': False})
+             'isAdmin': False, 'image': None})
     # Test with no password
     with pytest.raises(SQLAlchemyError):
         createUser(
             {'email': "abc@abc.com", 'firstName': 'FN', 'lastName': 'LN', 'username': 'username',
-             'isAdmin': False})
+             'isAdmin': False, 'image': None})
     # Test with no isAdmin
     with pytest.raises(SQLAlchemyError):
         createUser(
             {'email': "abc@abc.com", 'firstName': 'FN', 'lastName': 'LN', 'username': 'username',
-             'password': 'password'})
+             'password': 'password', 'image': None})
+    # Test with no image
+    with pytest.raises(SQLAlchemyError):
+        createUser(
+            {'email': "abc@abc.com", 'firstName': 'FN', 'lastName': 'LN', 'username': 'username',
+             'password': 'password', 'isAdmin': False})
 
 
 def test_checkPassword(secondUser):
@@ -85,7 +91,8 @@ def test_getUserByEmail(unitContext, newUser):
         It should return the correct user
     """
     # Check the user is returned
-    assert newUser == getUserByEmail('email@email.com')
+    print(getUsers())
+    assert newUser == getUserByEmail(newUser.email)
     # Check the user is not returned
     assert not getUserByEmail('wrongemail@email.com')
 
@@ -121,7 +128,7 @@ def test_getUsers(newUser, secondUser, unitContext):
     assert [newUser, newUser] != getUsers()
 
 
-def makeAdmin(newUser):
+def test_makeAdmin(newUser):
     """Test the makeAdmin function
         It should make the user an admin
     """

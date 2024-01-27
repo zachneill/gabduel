@@ -11,6 +11,6 @@ class PostForm(FlaskForm):
                         render_kw={'autofocus': True, 'placeholder': 'Title'})
     content = TextAreaField('Content', validators=[DataRequired(), Length(min=1, max=1000)],
                             render_kw={'placeholder': 'Content'})
-    authors = SelectField('Other Author', validators=[DataRequired(), Length(min=1, max=100)],
-                          render_kw={'placeholder': 'Authors'})
+    otherAuthor = SelectField('Other Author', validators=[DataRequired(), Length(min=1, max=100)],
+                              render_kw={'placeholder': 'Authors'})
     submit = SubmitField('Post', render_kw={'class': 'btn btn-success'})
