@@ -18,3 +18,13 @@ body {
     max-width: 200px;
     max-height: 200px;
 }
+.image-sm {
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 50%;
+}
+.image-xs {
+    max-width: 25px;
+    max-height: 25px;
+    border-radius: 50%;
+}

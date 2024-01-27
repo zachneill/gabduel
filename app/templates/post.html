@@ -12,8 +12,16 @@
         <br class="mt-5 pt-5"/>
         <form method="POST">
             {{ form.hidden_tag() }}
-            {{ form.otherAuthor.label(class="form-label float-start") }}
-            {{ form.otherAuthor(class="form-control mb-3") }}
+            <div class=" justify-content-center d-sm-block d-md-flex">
+                <div class="m-2 flex-shrink-1">
+                    {{ form.otherAuthor.label(class="form-label") }}
+                    {{ form.otherAuthor(class="form-control mx-auto mb-3") }}
+                </div>
+                <div class="m-2">
+                    {{ form.intensity.label(class="form-label")}}
+                    {{ form.intensity(class="form-control w-auto mx-auto mb-3 py-2", min='1', max='5') }}
+                </div>
+            </div>
             {{ form.title.label(class="form-label float-start") }}
             {{ form.title(class="form-control mb-3") }}
             {{ form.content.label(class="form-label float-start") }}

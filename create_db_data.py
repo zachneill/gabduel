@@ -46,7 +46,8 @@ with app.app_context(), app.test_request_context():
         post = Post(
             title=fake.sentence(),
             content=fake.paragraph(nb_sentences=20, variable_nb_sentences=True),
-            date=fake.date_time_this_decade()
+            date=fake.date_time_this_decade(),
+            intensity=random.randint(1, 5)
         )
         db.session.add(post)
         db.session.commit()

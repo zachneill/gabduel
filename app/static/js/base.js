@@ -22,3 +22,10 @@ function deletePost(postId) {
         }
     });
 }
+
+$("#searchButton").on("click", function () {
+    // Gets search query
+    let query = $("#search").val();
+    // Redirects to search page
+    window.location.href = `/search/${query}`;
+});

@@ -1,15 +1,16 @@
 <nav class="navbar navbar-dark navbar-expand-lg bg-dark">
-    <div class="container-fluid">
+    <div class="container-fluid m-0 p-0">
+        <img src="{{ url_for('static', filename='images/art/brand_logo.png') }}" alt="logo"
+             class="mt-0 pt-0 h-auto" style="max-width:60px">
         <a class="navbar-brand" href="/home">
-            <img src="{{ url_for('static', filename='images/fgd.png') }}" alt="logo"
-                 class="mt-0 pt-0" width="50px">
-            Folks Gab/Duel
+            <span class="d-none d-md-inline-block">Folks Gab/Duel</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -33,6 +34,11 @@
                     </li>
                 {% endif %}
             </ul>
+        </div>
+        <div class="d-none d-md-block float-end me-3">
+            <div>
+                {% include "extra/searchBar.html" %}
+            </div>
         </div>
     </div>
 </nav>

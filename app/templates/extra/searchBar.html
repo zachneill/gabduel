@@ -1,11 +1,4 @@
-{% from 'bootstrap5/form.html' import render_form %}
-
-<form class="form-inline"  method="POST">
-    {{ form.hidden_tag() }}
-    <div class="justify-content-center">
-        <div class="form-group d-flex m-auto w-50">
-            {{ form.search(class="form-control") }}
-            {{ form.submit(class="btn btn-success") }}
-        </div>
-    </div>
-</form>
+<div class="d-flex">
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search">
+    <button class="btn btn-success" type="button" id="searchButton">Search</button>
+</div>

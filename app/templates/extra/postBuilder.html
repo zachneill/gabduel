@@ -3,31 +3,50 @@
         <div class="col">
             <div class="card text-white bg-dark">
                 <div class="card-body">
-                    <div class="card-header p-0 text-muted d-flex justify-content-center">
-                        <p class="text-white px-2">
-                            by {{ post.authors[0].firstName }} {{ post.authors[0].lastName }} and
-                            {{ post.authors[1].firstName }} {{ post.authors[1].lastName }}
-                            on {{ post.date.strftime('%m/%d/%Y') }}
-                        </p>
-                        <div class="float-end">
-                            <a type="button" class="bg-transparent border-0 btn btn-sm m-0 p-0" href="/post/{{ post.id }}">
-                                <span class="fa fa-2x fa-pencil-square-o text-white
-                                    {{ 'd-none' if current_user not in post.authors }}"
-                                      aria-hidden="true">
-                                </span>
-                            </a>
-                            <button type="button" onclick="deletePost({{ post.id }})" data-csrf="{{ csrf_token() }}"
-                                    class="bg-transparent border-0 btn btn-sm mt-0 pt-0
-                                    {{ 'd-none' if current_user not in post.authors}}" id = "deleteButton">
-                                <span class="fa fa-2x fa-trash-o text-white
-                                    {{ 'd-none' if current_user not in post.authors }}"
-                                      aria-hidden="true"></span>
-                            </button>
+                    <div class="card-header pt-0 pb-2 text-muted">
+                        <div class="text-white px-2 d-flex justify-content-center">
+                            <div class="mx-2 p-1">
+                                <p class="m-0 p-0">{{ post.authors[0].firstName }} </p>
+                                <p class="m-0 p-0"> {{ post.authors[0].lastName }}</p>
+                            </div>
+                            <img src="{{ post.authors[0].image if post.authors[0].image.startswith("https://")
+                            else post.authors[0].image }}" alt="avatar{{ post.authors[0].id }}" class="image-sm">
+
+                            <div class="text-white mx-2">
+                                {% for i in range(post.intensity) %}
+                                    <img src="{{ url_for('static', filename='images/art/star.png') }}"
+                                         alt="star" class="image-xs">
+                                {% endfor %}
+                            </div>
+                            <img src="{{ post.authors[1].image if post.authors[0].image.startswith("https://")
+                            else post.authors[1].image }}" alt="avatar{{ post.authors[1].id }}" class="image-sm">
+                            <div class="mx-2 p-1">
+                                <p class="m-0 p-0">{{ post.authors[1].firstName }} </p>
+                                <p class="m-0 p-0"> {{ post.authors[1].lastName }}</p>
+                            </div>
+
                         </div>
+                        <p class="text-white">{{ post.date.strftime('%m/%d/%Y') }}</p>
                     </div>
                     <h3 class="card-title">{{ post.title }}</h3>
                     <p class="card-text text-start indent">{{ post.content }}</p>
                     <br>
+                    <div class="float-end">
+                        <a type="button" class="bg-transparent border-0 btn btn-sm m-0 p-0"
+                           href="/post/{{ post.id }}">
+                            <span class="fa fa-2x fa-pencil-square-o text-white
+                                {{ 'd-none' if current_user not in post.authors }}"
+                                  aria-hidden="true">
+                            </span>
+                        </a>
+                        <button type="button" onclick="deletePost({{ post.id }})" data-csrf="{{ csrf_token() }}"
+                                class="bg-transparent border-0 btn btn-sm mt-0 pt-0
+                                {{ 'd-none' if current_user not in post.authors}}" id = "deleteButton">
+                            <span class="fa fa-2x fa-trash-o text-white
+                                {{ 'd-none' if current_user not in post.authors }}"
+                                  aria-hidden="true"></span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

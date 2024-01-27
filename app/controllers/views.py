@@ -16,12 +16,7 @@ def home():
     # Paginate the posts
     page = request.args.get('page', 1, type=int)
     pages = posts.paginate(page=page, per_page=5)
-    # Add the search bar
-    form = SearchForm()
-    if form.validate_on_submit():
-        return redirect(url_for('views.search', query=form.search.data))
-
-    return render_template("home.html", posts=posts, pages=pages, form=form)
+    return render_template("home.html", posts=posts, pages=pages)
 
 
 @views.route('/about')
