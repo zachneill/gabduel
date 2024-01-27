@@ -7,5 +7,5 @@ from wtforms.validators import DataRequired, Length
 class SearchForm(FlaskForm):
     """Form for the search bar in the navbar"""
     search = StringField('Search', validators=[DataRequired(), Length(min=2, max=80)],
-                         render_kw={'placeholder': 'Search', 'class': 'w-50 m-auto'})
+                         render_kw={'placeholder': 'Search in Posts', 'class': 'w-50 m-auto'})
     submit = SubmitField('Go', render_kw={'class': 'btn btn-success d-flex'})

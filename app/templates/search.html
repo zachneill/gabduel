@@ -1,5 +1,4 @@
 {% extends "extra/base.html" %}
-{% from 'bootstrap5/form.html' import render_form %}
 {% set title = "Search Results" %}
 {% block scripts %}
     {{ super() }}
@@ -20,39 +19,7 @@
             </div>
         </form>
         <br>
-        <div class="row row-cols-auto justify-content-center g-4 text-center" style="">
-            {% for post in pages %}
-                <div class="col">
-                    <div class="card text-white bg-dark">
-                        <div class="card-body">
-                            <div class="card-header p-0 text-muted d-flex justify-content-center">
-                                <p class="text-white px-2">by {{ post.user.firstName }} {{ post.user.lastName }}
-                                    on {{ post.date.strftime('%m/%d/%Y') }}
-                                </p>
-                                <a type="button" href="/post/{{ post.id }}">
-                                    <span class="fa fa-2x fa-pencil-square-o {{ 'd-none' if post.author != current_user.id }}"
-                                          aria-hidden="true">
-                                    </span>
-                                </a>
-                                <button type="button" onclick="deletePost({{ post.id }})" data-csrf="{{ csrf_token() }}"
-                                        class="bg-transparent border-0 {{ 'd-none' if post.author != current_user.id }}"
-                                        id="delete">
-                                    <span class="fa fa-2x fa-trash-o text-white {{ 'd-none' if post.author != current_user.id }}"
-                                                 aria-hidden="true"></span>
-                                </button>
-                            </div>
-                            <h3 class="card-title">{{ post.title }}
-                            </h3>
-                            <p class="card-text text-start indent">{{ post.content }}</p>
-                            <br>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <br>
-            {% endfor %}
-        </div>
+    {% include "extra/postBuilder.html" %}
         <nav aria-label="Page navigation">
         <ul class="my-3 pagination justify-content-center">
             <li class="page-item d-none d-md-block">

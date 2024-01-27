@@ -1,5 +1,4 @@
 {% extends "extra/base.html" %}
-{% from 'bootstrap5/form.html' import render_form %}
 {% set title = "Home" %}
 {% block scripts %}
     {{ super() }}
@@ -10,64 +9,24 @@
     <div class="mt-5 text-center">
         <h1>This is Folks Gab/Duel</h1>
         <br>
-        <form class="form-inline"  method="POST">
-            {{ form.hidden_tag() }}
-            <div class="justify-content-center">
-                <div class="form-group d-flex m-auto w-50">
-                    {{ form.search(class="form-control") }}
-                    {{ form.submit(class="btn btn-success") }}
-                </div>
-            </div>
-        </form>
+        {% include "extra/searchBar.html" %}
         <br>
-        <div class="row row-cols-auto justify-content-center g-4 text-center" style="">
-            {% for post in pages %}
-                <div class="col">
-                    <div class="card text-white bg-dark">
-                        <div class="card-body">
-                            <div class="card-header p-0 text-muted d-flex justify-content-center">
-                                <p class="text-white px-2">by {{ post.user.firstName }} {{ post.user.lastName }}
-                                    on {{ post.date.strftime('%m/%d/%Y') }}
-                                </p>
-                                <a type="button" href="/post/{{ post.id }}">
-                                    <span class="fa fa-2x fa-pencil-square-o {{ 'd-none' if post.author != current_user.id }}"
-                                          aria-hidden="true">
-                                    </span>
-                                </a>
-                                <button type="button" onclick="deletePost({{ post.id }})" data-csrf="{{ csrf_token() }}"
-                                        class="bg-transparent border-0 {{ 'd-none' if post.author != current_user.id }}"
-                                        id="delete">
-                                    <span class="fa fa-2x fa-trash-o text-white {{ 'd-none' if post.author != current_user.id }}"
-                                                 aria-hidden="true"></span>
-                                </button>
-                            </div>
-                            <h3 class="card-title">{{ post.title }}
-                            </h3>
-                            <p class="card-text text-start indent">{{ post.content }}</p>
-                            <br>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <br>
-            {% endfor %}
-        </div>
-    <nav aria-label="Page navigation">
-  <ul class="my-3 pagination justify-content-center">
-    <li class="page-item d-none d-md-block {{ disabled if not pages.has_prev }}">
-        <a class="page-link border-0 bg-dark text-white" href="{{ url_for("views.home", page=pages.prev_num) }}" >Previous</a>
-    </li>
-    {%  for page in pages.iter_pages(left_current=1, right_current=2) %}
-        <li class="page-item {{ 'active' if page == pages.page }}">
-            <a class="page-link border-0" href="./?page={{ page }}">{{ page if page else "..." }}</a>
+        {% include "extra/postBuilder.html" %}
+        <nav aria-label="Page navigation">
+        <ul class="my-3 pagination justify-content-center">
+        <li class="page-item d-none d-md-block {{ disabled if not pages.has_prev }}">
+            <a class="page-link border-0 bg-dark text-white" href="{{ url_for("views.home", page=pages.prev_num) }}" >Previous</a>
         </li>
-    {% endfor %}
-    <li class="page-item d-none d-md-block {{ disabled if not pages.has_next }}">
-        <a class="page-link border-0 bg-dark text-white" href="{{ url_for('views.home', page=pages.next_num) }}">Next</a>
-    </li>
+        {% for page in pages.iter_pages(left_current=1, right_current=2) %}
+            <li class="page-item {{ 'active' if page == pages.page }}">
+                <a class="page-link border-0" href="./?page={{ page }}">{{ page if page else "..." }}</a>
+            </li>
+        {% endfor %}
+        <li class="page-item d-none d-md-block {{ disabled if not pages.has_next }}">
+            <a class="page-link border-0 bg-dark text-white" href="{{ url_for('views.home', page=pages.next_num) }}">Next</a>
+        </li>
 
-  </ul>
-</nav>
+        </ul>
+        </nav>
     </div>
 {% endblock %}

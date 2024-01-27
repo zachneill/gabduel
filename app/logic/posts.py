@@ -2,14 +2,19 @@
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
 from app.models.objects.post import Post
+from app.models.objects.user import User
 from database import db
 
 
 def createPost(data):
     """Create a new post"""
     try:
-        newPost = Post(title=data['title'], content=data['content'], author=data['author'])
+        newPost = Post(title=data['title'], content=data['content'])
         db.session.add(newPost)
+        author1 = User.query.get(data['authors'][0])
+        author2 = User.query.get(data['authors'][1])
+        newPost.authors.append(author1)
+        newPost.authors.append(author2)
         db.session.commit()
     except Exception as e:
         print("Failed to create post with error", e)
@@ -58,3 +63,5 @@ def deletePost(data):
 def getSearchResults(query):
     """Get the search results"""
     return Post.query.filter(Post.title.contains(query) | Post.content.contains(query)).order_by(Post.date.desc())
+
+

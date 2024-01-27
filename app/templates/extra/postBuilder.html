@@ -1,0 +1,36 @@
+<div class="row row-cols-auto justify-content-center g-4 text-center">
+    {% for post in posts %}
+        <div class="col">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <div class="card-header p-0 text-muted d-flex justify-content-center">
+                        <p class="text-white px-2">
+                            by {{ post.authors[0].firstName }} {{ post.authors[0].lastName }} and
+                            {{ post.authors[1].firstName }} {{ post.authors[1].lastName }}
+                            on {{ post.date.strftime('%m/%d/%Y') }}
+                        </p>
+                        <a type="button" href="/post/{{ post.id }}">
+                            <span class="fa fa-2x fa-pencil-square-o
+                                {{ 'd-none' if current_user.id not in post.authors }}"
+                                  aria-hidden="true">
+                            </span>
+                        </a>
+                        <button type="button" onclick="deletePost({{ post.id }})" data-csrf="{{ csrf_token() }}"
+                                class="bg-transparent border-0
+                                {{ 'd-none' if current_user.id not in post.authors}}" id="delete">
+                            <span class="fa fa-2x fa-trash-o text-white
+                                {{ 'd-none' if current_user.id not in post.authors }}"
+                                  aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <h3 class="card-title">{{ post.title }}</h3>
+                    <p class="card-text text-start indent">{{ post.content }}</p>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+    {% endfor %}
+</div>

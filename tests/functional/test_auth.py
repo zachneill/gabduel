@@ -128,6 +128,7 @@ def test_update(app):
 
 
 def test_delete(app, newPost):
+    """Test the delete functionality."""
     # Send a POST request to the application
     with app.test_client() as testingClient:
         # Establish an application context before running the tests
@@ -138,7 +139,7 @@ def test_delete(app, newPost):
 
 
 def test_cannot_delete(app, secondPost):
-    """Test the delete functionality."""
+    """Test the delete functionality where you are not the author."""
     with app.test_client() as testingClient:
         # Test if you are not the author of the post
         response = testingClient.post('/delete', data={'postId': secondPost.id}, follow_redirects=True)

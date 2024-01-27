@@ -4,11 +4,49 @@
     {{ super() }}
 {% endblock %}
 {% block app_content %}
-    <div class="mt-5 text-center">
-        <h1>About</h1>
+    <div class="mt-5">
+        <h1 class="text-center">About</h1>
         <br>
-        <h3>Folks Gab/Duel is an established organization dedicated to correct and verifiable news.</h3>
+        <h3 class="text-center">Folks Gab/Duel combines casual discussion with engaging debates.</h3>
         <br>
-        <p>Our staff comprises numerous well-respected figures with eyes on the truth.</p>
+        <p>Every post includes two authors. They are separated into two groups: Gab and Duel.</p>
+        <h3 class="h3">Gab</h3>
+        <p>
+            This part of the blog could focus on creating a platform for people to engage in open and
+            constructive conversations. Topics include current events, pop culture, personal experiences, and more.
+            Posts feature guest bloggers and interviews with individuals from various backgrounds, bringing
+            diverse perspectives and insights to the community.
+        </p>
+        <h3 class="h3">Duel</h3>
+        <p>
+            This section involves hosting debates or discussions where contributors express
+            their opinions on various. Each author is on opposing sides of the topic or expresses dissimilar
+            viewpoints. Duel also includes competitions or challenges, such as writing contests. These posts
+            cover a wide range of topics, including anything from technology and science to arts and entertainment,
+            ensuring there's something for everyone.
+        </p>
+        <h3 class="h3">Intensity scale</h3>
+        <p>
+            Each post is assigned an intensity level by the author, which is indicated by the number of flames.
+            The scale ranges from 1 to 5, with 1 being the least intense and 5 being the most intense. Factors that
+            affect intensity include the controversial nature of the topic, the author's tone,
+            and the author's level of passion.
+        </p>
+        <h1 class="text-center mt-5">Meet the team</h1>
+            <div class="row row-cols-auto justify-content-center g-4 text-center mt-5">
+            {% for author in authors %}
+                <div class="col">
+                    <div class="card text-white bg-dark">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ author.firstName }} {{ author.lastName }}</h5>
+                        </div>
+                        <img src="{{ author.image }}" class="card-img" alt="avatar{{ author.id }}">
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

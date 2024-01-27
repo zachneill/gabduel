@@ -1,7 +1,9 @@
 """This file contains the logic for functions related to accounts"""
+from sqlalchemy import and_, func
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from app.models.objects.post import Post
 from app.models.objects.user import User
 from database import db
 
@@ -50,3 +52,9 @@ def makeAdmin(userId):
     user.isAdmin = True
     db.session.commit()
     return user
+
+
+def getAuthors():
+    """Get all authors"""
+    query = User.query.join(Post.authors).group_by(User.id).having(func.count(Post.id) > 0).all()
+    return query

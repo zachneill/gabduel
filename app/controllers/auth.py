@@ -87,10 +87,15 @@ def logout():
 def create():
     """Create post route"""
     form = PostForm()
+    # Populate the choice of other author
+    users = getUsers()
+    form.authors.choices = [(user.id, f"{user.firstName} {user.lastName} ({user.username})")
+                            for user in users if user.id != current_user.id]
     # Check if the form is valid
     if form.validate_on_submit():
         # Create the post
-        createPost({"content": form.content.data, "title": form.title.data, "author": current_user.id})
+        createPost({"content": form.content.data, "title": form.title.data,
+                    "authors": [current_user.id, form.authors.data]})
         flash('Post created!', 'success')
         return redirect('/home')
     return render_template("post.html", form=form, post=None)
@@ -102,7 +107,7 @@ def update(postId):
     """Update post route"""
     # Check if the user is the author of the post
     post = getPostById(postId)
-    if not post or post.author != current_user.id:
+    if not post or post.author != current_user.id or post.author2 != current_user.id:
         flash('You are not the author of this post.', 'danger')
         return redirect('/home')
     form = PostForm(obj=post)
@@ -124,7 +129,7 @@ def delete():
     postId = int(request.form['postId'])
     post = getPostById(postId)
     # Check if the form is valid
-    if post.author == current_user.id:
+    if post.author1 == current_user.id or post.author2 == current_user.id:
         # Delete the post
         deletePost({"id": postId})
     else:

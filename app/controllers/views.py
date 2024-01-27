@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 
+from app.logic.accounts import getUsers, getAuthors
 from app.logic.posts import getPosts, getSearchResults
 from app.models.forms.SearchForm import SearchForm
 
 views = Blueprint('views', __name__)
 
 
-@views.route('/')
+@views.route('/', methods=['GET', 'POST'])
 @views.route('/home', methods=['GET', 'POST'])
 def home():
     """Render the home page"""
@@ -26,7 +27,8 @@ def home():
 @views.route('/about')
 def about():
     """Render the about page"""
-    return render_template("about.html")
+    authors = getAuthors()
+    return render_template("about.html", authors=authors)
 
 
 @views.route('/search/<query>', methods=['GET', 'POST'])
