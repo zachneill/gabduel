@@ -21,7 +21,7 @@ def createUser(data):
             filename = url_for('static', filename='images/avatars/' + data['username'] + '.png')
         else:
             # If no image is provided, use the dicebear API to generate an avatar
-            filename = f'https://api.dicebear.com/7.x/micah/svg?seed={str(uuid.uuid4())[:7]}&mouth=smile&eyes=smiling'
+            filename = f'https://api.dicebear.com/7.x/micah/svg?seed={str(uuid.uuid4())[:7]}'
 
         newUser = User(email=data['email'], firstName=data['firstName'], lastName=data['lastName'],
                        username=data['username'], password=generate_password_hash(data['password'], method='scrypt'),

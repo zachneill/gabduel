@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUsers, \
     makeAdmin
-from app.logic.posts import createPost, getPostById, updatePost, deletePost
+from app.logic.posts import createPost, getPostById, updatePost, deletePost, incrementViewCount, supportAuthor
 from app.models.forms.AdminForm import AdminForm
 from app.models.forms.LoginForm import LoginForm
 from app.models.forms.PostForm import PostForm
@@ -96,10 +96,10 @@ def create():
     if form.validate_on_submit():
         # Create the post
         createPost({"content": form.content.data, "title": form.title.data, "intensity": form.intensity.data,
-                    "authors": [current_user.id, form.otherAuthor.data]})
+                    "authors": [current_user.id, form.otherAuthor.data], "type": form.type.data})
         flash('Post created!', 'success')
         return redirect('/home')
-    return render_template("post.html", form=form, post=None)
+    return render_template("upsertPost.html", form=form, post=None)
 
 
 @auth.route('/post/<postId>', methods=['GET', 'POST'])
@@ -115,18 +115,40 @@ def update(postId):
     form = PostForm(content=post.content, title=post.title, intensity=post.intensity,
                     otherAuthor=str(post.authors[1].id)
                     if post.authors[1] != current_user
-                    else str(post.authors[0].id))
+                    else str(post.authors[0].id), type=post.type)
     form.otherAuthor.choices = [(user.id, f"{user.firstName} {user.lastName} ({user.username})")
                                 for user in users if user.id != current_user.id]
     # Check if the form is valid
     if form.validate_on_submit():
         # Update the post
         updatePost({"id": postId, "content": form.content.data, "title": form.title.data, "authors":
-                    [current_user.id, form.otherAuthor.data], "intensity": form.intensity.data})
+                    [current_user.id, form.otherAuthor.data], "intensity": form.intensity.data,
+                    "type": form.type.data})
         flash('Post updated!', 'success')
         return redirect('/home')
 
-    return render_template("post.html", form=form, post=post)
+    return render_template("upsertPost.html", form=form, post=post)
+
+
+@auth.route('/post/updateViews', methods=['GET', 'POST'])
+def updateViews():
+    """Update views route"""
+    # Get the data from the ajax request
+    postId = int(request.form['postId'])
+    incrementViewCount(postId)
+    return redirect('/home')
+
+
+@auth.route('/post/support', methods=['GET', 'POST'])
+def support():
+    """Update views route"""
+    # Get the data from the ajax request
+    postId = int(request.form['postId'])
+    supportId = int(request.form['supportId'])
+    mindChanged = int(request.form['mindChanged'])
+    print(postId, supportId, mindChanged)
+    supportAuthor(postId, supportId, mindChanged)
+    return redirect(f'/home#author1_FN_{postId}')
 
 
 @auth.route('/delete', methods=['POST'])

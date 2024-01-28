@@ -122,7 +122,7 @@ def test_create_post(app):
         assert b'Post' in response.data
         # # Test successful post created
         response = testingClient.post('/post', follow_redirects=True, data={'content': 'content', 'title': 'title',
-                                                                            'otherAuthor': [99]})
+                                                                            'otherAuthor': [99], 'type': "duel"})
         assert response.status_code == 200
         assert b'Post created!' in response.data
 
@@ -139,14 +139,14 @@ def test_update(app, newPost, secondPost):
         # Test successful post updated
         response = testingClient.post(f'/post/{newPost.id}', follow_redirects=True,
                                       data={'content': 'new content', 'title': 'new title', 'otherAuthor':
-                                          [99]})
+                                          [99], 'type': "duel"})
         assert response.status_code == 200
         assert b'Post updated!' in response.data
 
         # Test changing someone else's post
         response = testingClient.post(f'/post/{secondPost.id}', follow_redirects=True,
                                       data={'content': 'new content', 'title': 'new title', 'otherAuthor':
-                                          [99]})
+                                          [99], 'type': "duel"})
         assert response.status_code == 200
         assert b'You are not the author' in response.data
 

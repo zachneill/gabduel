@@ -28,3 +28,6 @@ body {
     max-height: 25px;
     border-radius: 50%;
 }
+.supported {
+    border: 0.2rem solid darkgreen;
+}

@@ -10,7 +10,7 @@ def test_about(app):
         with app.app_context():
             response = testingClient.get(url_for('views.about'), follow_redirects=True)
             assert response.status_code == 200
-            assert b'combines casual discussion' in response.data
+            assert b'combine casual discussion' in response.data
 
 
 def test_home(app):

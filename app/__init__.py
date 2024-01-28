@@ -65,12 +65,12 @@ def create_app():
     # For PWA
     @app.route('/manifest.json')
     def serve_manifest():
-        return send_file(url_for('static',filename='manifest.json'),
+        return send_file('static/manifest.json',
                          mimetype='application/manifest+json')
 
     @app.route('/sw.js')
     def serve_sw():
-        return send_file(url_for('static', filename='js/sw.js'),
+        return send_file('static/sw.js',
                          mimetype='application/javascript')
 
     return app

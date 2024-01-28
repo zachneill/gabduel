@@ -4,7 +4,7 @@
     "start_url": "/",
     "scope": "/",
     "display": "standalone",
-    "description": "Gab/Duel allows users to gab with and duel each other online.",
+    "description": "Gab/Duel allows people with opinions to gab with and duel each other online",
     "orientation": "portrait",
     "icons": [
         {

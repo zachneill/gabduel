@@ -1,5 +1,6 @@
 import os
 import random
+from math import floor
 
 from app import create_app
 from app.models.objects.post import Post
@@ -31,7 +32,7 @@ with app.app_context(), app.test_request_context():
         else:
             gender = "women"
         if "." in profile["name"]:
-            profile["name"] = profile["name"].split('.')[1].strip()
+            profile["name"] = profile["name"].split('.')[1]
         user = User(
             firstName=profile['name'].split(' ')[0],
             lastName=profile['name'].split(' ')[1],
@@ -45,12 +46,19 @@ with app.app_context(), app.test_request_context():
         db.session.commit()
     print('Creating new posts...')
     for i in range(numPosts):
+        views = random.randint(1, 5000)
+        supported1 = random.randint(0, views)
+        supported2 = floor((views - supported1) * (random.randint(70, 100)/100))
+        supported1 = floor(supported1 * random.randint(70, 100)/100)
         post = Post(
             title=fake.sentence(),
             content=fake.paragraph(nb_sentences=20, variable_nb_sentences=True),
             date=fake.date_time_this_decade(),
             intensity=random.randint(1, 5),
-            isDuel=random.choice([True, False])
+            type=random.choice(['duel', 'gab']),
+            views=views,
+            supported1=supported1,
+            supported2=supported2
         )
         db.session.add(post)
         db.session.commit()

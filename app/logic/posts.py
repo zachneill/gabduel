@@ -9,7 +9,8 @@ from database import db
 def createPost(data):
     """Create a new post"""
     try:
-        newPost = Post(title=data['title'], content=data['content'], intensity=data['intensity'])
+        newPost = Post(title=data['title'], content=data['content'], intensity=data['intensity'],
+                       type=data['type'], views=0, likes1=0, likes2=0)
         db.session.add(newPost)
         author1 = db.session.get(User, data['authors'][0])
         author2 = db.session.get(User, data['authors'][1])
@@ -40,6 +41,7 @@ def updatePost(data):
         post.title = data['title']
         post.content = data['content']
         post.intensity = data['intensity']
+        post.type = data['type']
         author1 = db.session.get(User, data['authors'][0])
         author2 = db.session.get(User, data['authors'][1])
         post.authors.clear()
@@ -48,7 +50,41 @@ def updatePost(data):
         db.session.commit()
     except Exception as e:
         print("Failed to update post with error: ", e)
+        raise SQLAlchemyError
+
+    return post
+
+
+def incrementViewCount(postId):
+    """Update the views of a post"""
+    try:
+        post = db.session.get(Post, postId)
+        post.views += 1
+        db.session.commit()
+    except Exception as e:
+        print("Failed to update views with error: ", e)
         raise NoResultFound
+
+    return post
+
+
+def supportAuthor(postId, supportId, mindChanged):
+    """Support an author"""
+    try:
+        post = db.session.get(Post, postId)
+        if supportId == 1:
+            post.supported1 += 1
+        else:
+            post.supported2 += 1
+        if mindChanged == 1:
+            if supportId == 1:
+                post.supported2 -= 1
+            else:
+                post.supported1 -= 1
+        db.session.commit()
+    except Exception as e:
+        print("Failed to support author with error: ", e)
+        raise SQLAlchemyError
 
     return post
 
