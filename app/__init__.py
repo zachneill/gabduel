@@ -7,7 +7,7 @@ from os import path
 
 from flask import Flask, redirect, send_file, url_for
 from flask_bootstrap import Bootstrap5
-from flask_login import LoginManager
+from flask_login import LoginManager, AnonymousUserMixin
 from flask_wtf import CSRFProtect
 
 from app.controllers.auth import auth
@@ -32,10 +32,17 @@ def create_app():
         db.create_all()
 
     # Maintain login settings
+    class Anonymous(AnonymousUserMixin):
+        def __init__(self):
+            self.image = ''
+            self.username = 'Anonymous'
+
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.login_message_category = "warning"
     login_manager.init_app(app)
+    login_manager.anonymous_user = Anonymous
+
 
     @login_manager.user_loader
     def load_user(user_id):

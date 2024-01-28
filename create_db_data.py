@@ -33,6 +33,7 @@ with app.app_context(), app.test_request_context():
             gender = "women"
         if "." in profile["name"]:
             profile["name"] = profile["name"].split('.')[1]
+            profile["name"] = profile["name"].strip()
         user = User(
             firstName=profile['name'].split(' ')[0],
             lastName=profile['name'].split(' ')[1],
@@ -40,15 +41,18 @@ with app.app_context(), app.test_request_context():
             email=profile['mail'],
             password=fake.password(),
             isAdmin=False,
-            image=f"https://randomuser.me/api/portraits/{gender}/{shuffledUsers[i]}.jpg"
+            image=f"https://randomuser.me/api/portraits/{gender}/{shuffledUsers[i]}.jpg",
+            supports=0,
+            postCount=0,
+            joined=fake.date_time_this_decade()
         )
         db.session.add(user)
         db.session.commit()
     print('Creating new posts...')
     for i in range(numPosts):
-        views = random.randint(1, 5000)
-        supported1 = random.randint(0, views)
-        supported2 = floor((views - supported1) * (random.randint(70, 100)/100))
+        total = random.randint(1, 5000)
+        supported1 = random.randint(0, total)
+        supported2 = floor((total - supported1) * (random.randint(70, 100)/100))
         supported1 = floor(supported1 * random.randint(70, 100)/100)
         post = Post(
             title=fake.sentence(),
@@ -56,7 +60,6 @@ with app.app_context(), app.test_request_context():
             date=fake.date_time_this_decade(),
             intensity=random.randint(1, 5),
             type=random.choice(['duel', 'gab']),
-            views=views,
             supported1=supported1,
             supported2=supported2
         )
@@ -70,6 +73,12 @@ with app.app_context(), app.test_request_context():
             author2 = db.session.get(User, random.randint(1, numUsers))
             if author1 != author2:
                 break
+        postedDate = max(author1.joined, author2.joined)
+        post.date = fake.date_time_between_dates(datetime_start=postedDate)
+        author1.supports += post.supported1
+        author1.postCount += 1
+        author2.supports += post.supported2
+        author2.postCount += 1
         post.authors.append(author1)
         post.authors.append(author2)
         db.session.commit()

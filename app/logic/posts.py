@@ -10,12 +10,14 @@ def createPost(data):
     """Create a new post"""
     try:
         newPost = Post(title=data['title'], content=data['content'], intensity=data['intensity'],
-                       type=data['type'], views=0, likes1=0, likes2=0)
+                       type=data['type'], supported1=0, supported2=0)
         db.session.add(newPost)
         author1 = db.session.get(User, data['authors'][0])
         author2 = db.session.get(User, data['authors'][1])
         newPost.authors.append(author1)
         newPost.authors.append(author2)
+        author1.postCount += 1
+        author2.postCount += 1
         db.session.commit()
     except Exception as e:
         print("Failed to create post with error: ", e)
@@ -27,6 +29,11 @@ def createPost(data):
 def getPosts():
     """Get all posts, sorted newest to oldest"""
     return Post.query.order_by(Post.date.desc())
+
+
+def getUserPosts(user):
+    """Get all posts by a user"""
+    return Post.query.filter(Post.authors.contains(user)).order_by(Post.date.desc())
 
 
 def getPostById(postId):
@@ -55,32 +62,25 @@ def updatePost(data):
     return post
 
 
-def incrementViewCount(postId):
-    """Update the views of a post"""
-    try:
-        post = db.session.get(Post, postId)
-        post.views += 1
-        db.session.commit()
-    except Exception as e:
-        print("Failed to update views with error: ", e)
-        raise NoResultFound
-
-    return post
-
-
 def supportAuthor(postId, supportId, mindChanged):
     """Support an author"""
     try:
         post = db.session.get(Post, postId)
+        author1 = post.authors[0]
+        author2 = post.authors[1]
         if supportId == 1:
             post.supported1 += 1
+            author1.supports += 1
         else:
             post.supported2 += 1
-        if mindChanged == 1:
+            author2.supports += 1
+        if mindChanged:
             if supportId == 1:
                 post.supported2 -= 1
+                author2.supports -= 1
             else:
                 post.supported1 -= 1
+                author1.supports -= 1
         db.session.commit()
     except Exception as e:
         print("Failed to support author with error: ", e)

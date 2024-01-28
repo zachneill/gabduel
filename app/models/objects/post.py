@@ -13,7 +13,6 @@ class Post(db.Model):
     date = db.Column(db.DateTime(timezone=True), nullable=False, default=datetime.now())
     intensity = db.Column(db.Integer, nullable=False, default=1)
     type = db.Column(db.String(10), nullable=False, default='Duel')
-    views = db.Column(db.Integer, nullable=False, default=0)
     supported1 = db.Column(db.Integer, nullable=False, default=0)
     supported2 = db.Column(db.Integer, nullable=False, default=0)
     authors = db.relationship('User', secondary=postAuthors,

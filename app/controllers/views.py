@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 
-from app.logic.accounts import getUsers, getAuthors
-from app.logic.posts import getPosts, getSearchResults
+from app.logic.accounts import getUsers, getAuthors, getUserByUsername
+from app.logic.posts import getPosts, getSearchResults, getUserPosts
 from app.models.forms.SearchForm import SearchForm
 
 views = Blueprint('views', __name__)
@@ -24,6 +24,17 @@ def about():
     """Render the about page"""
     authors = getAuthors()
     return render_template("about.html", authors=authors)
+
+
+@views.route('/user/<username>')
+def profile(username):
+    """Render the profile page"""
+    user = getUserByUsername(username)
+    userPosts = getUserPosts(user)
+    # Paginate the posts
+    page = request.args.get('page', 1, type=int)
+    pages = userPosts.paginate(page=page, per_page=5)
+    return render_template("profile.html", user=user, userPosts=userPosts, pages=pages)
 
 
 @views.route('/search/<query>', methods=['GET', 'POST'])

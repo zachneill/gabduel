@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUsers, \
     makeAdmin
-from app.logic.posts import createPost, getPostById, updatePost, deletePost, incrementViewCount, supportAuthor
+from app.logic.posts import createPost, getPostById, updatePost, deletePost, supportAuthor
 from app.models.forms.AdminForm import AdminForm
 from app.models.forms.LoginForm import LoginForm
 from app.models.forms.PostForm import PostForm
@@ -130,23 +130,13 @@ def update(postId):
     return render_template("upsertPost.html", form=form, post=post)
 
 
-@auth.route('/post/updateViews', methods=['GET', 'POST'])
-def updateViews():
-    """Update views route"""
-    # Get the data from the ajax request
-    postId = int(request.form['postId'])
-    incrementViewCount(postId)
-    return redirect('/home')
-
-
 @auth.route('/post/support', methods=['GET', 'POST'])
 def support():
     """Update views route"""
     # Get the data from the ajax request
     postId = int(request.form['postId'])
     supportId = int(request.form['supportId'])
-    mindChanged = int(request.form['mindChanged'])
-    print(postId, supportId, mindChanged)
+    mindChanged = request.form['mindChanged'] == 'true'
     supportAuthor(postId, supportId, mindChanged)
     return redirect(f'/home#author1_FN_{postId}')
 

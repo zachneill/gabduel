@@ -1,4 +1,6 @@
 """This file contains the User object for the database"""
+from datetime import datetime
+
 from flask_login import UserMixin
 
 from app.models.objects.postAuthors import postAuthors
@@ -16,7 +18,10 @@ class User(db.Model, UserMixin):
     isAdmin = db.Column(db.Boolean, nullable=False, default=False)
     image = db.Column(db.String(20), nullable=False,
                       default='https://api.dicebear.com/7.x/micah/svg?seed=abc&mouth=smile')
-    posts = db.relationship('Post', secondary=postAuthors,back_populates="authors",
+    joined = db.Column(db.DateTime(timezone=True), nullable=False, default=datetime.now())
+    supports = db.Column(db.Integer, nullable=False, default=0)
+    postCount = db.Column(db.Integer, nullable=False, default=0)
+    posts = db.relationship('Post', secondary=postAuthors, back_populates="authors",
                             passive_deletes=True, lazy=True)
 
     def __repr__(self):

@@ -37,7 +37,21 @@
                 {% endif %}
             </ul>
         </div>
-        <div class="d-none d-md-block float-end me-3">
+        <div class="d-none d-md-flex float-end me-3">
+            <div class="w-25 me-3">
+                {% if current_user.is_authenticated %}
+                    <a href="/user/{{ current_user.username }}">
+                        {% if current_user.image.startswith("https://") %}
+                            <img src="{{ current_user.image }}" alt="profile"
+                                 class="mt-0 pt-0 border border-3 rounded-circle border-success"
+                                 style="max-width:3rem; max-height:3rem">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/avatars/'+current_user.username) }}"
+                                 alt="profile" class="mt-0 pt-0 h-auto me-1" style="max-width:2rem">
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </div>
             <div>
                 {% include "extra/searchBar.html" %}
             </div>
