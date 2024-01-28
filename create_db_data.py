@@ -30,6 +30,8 @@ with app.app_context(), app.test_request_context():
             gender = "men"
         else:
             gender = "women"
+        if "." in profile["name"]:
+            profile["name"] = profile["name"].split('.')[1].strip()
         user = User(
             firstName=profile['name'].split(' ')[0],
             lastName=profile['name'].split(' ')[1],
@@ -47,7 +49,8 @@ with app.app_context(), app.test_request_context():
             title=fake.sentence(),
             content=fake.paragraph(nb_sentences=20, variable_nb_sentences=True),
             date=fake.date_time_this_decade(),
-            intensity=random.randint(1, 5)
+            intensity=random.randint(1, 5),
+            isDuel=random.choice([True, False])
         )
         db.session.add(post)
         db.session.commit()

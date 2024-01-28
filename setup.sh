@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This script sets up the project for development
 
 # Create a virtual environment for dependencies
 if [ ! -d venv ]

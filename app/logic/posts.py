@@ -9,7 +9,7 @@ from database import db
 def createPost(data):
     """Create a new post"""
     try:
-        newPost = Post(title=data['title'], content=data['content'])
+        newPost = Post(title=data['title'], content=data['content'], intensity=data['intensity'])
         db.session.add(newPost)
         author1 = db.session.get(User, data['authors'][0])
         author2 = db.session.get(User, data['authors'][1])
@@ -39,6 +39,7 @@ def updatePost(data):
         post = db.session.get(Post, data['id'])
         post.title = data['title']
         post.content = data['content']
+        post.intensity = data['intensity']
         author1 = db.session.get(User, data['authors'][0])
         author2 = db.session.get(User, data['authors'][1])
         post.authors.clear()

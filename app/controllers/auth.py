@@ -95,7 +95,7 @@ def create():
     # Check if the form is valid
     if form.validate_on_submit():
         # Create the post
-        createPost({"content": form.content.data, "title": form.title.data,
+        createPost({"content": form.content.data, "title": form.title.data, "intensity": form.intensity.data,
                     "authors": [current_user.id, form.otherAuthor.data]})
         flash('Post created!', 'success')
         return redirect('/home')
@@ -112,7 +112,7 @@ def update(postId):
     if not post or current_user not in post.authors:
         flash('You are not the author of this post.', 'danger')
         return redirect('/home')
-    form = PostForm(content=post.content, title=post.title,
+    form = PostForm(content=post.content, title=post.title, intensity=post.intensity,
                     otherAuthor=str(post.authors[1].id)
                     if post.authors[1] != current_user
                     else str(post.authors[0].id))
@@ -122,7 +122,7 @@ def update(postId):
     if form.validate_on_submit():
         # Update the post
         updatePost({"id": postId, "content": form.content.data, "title": form.title.data, "authors":
-                    [current_user.id, form.otherAuthor.data]})
+                    [current_user.id, form.otherAuthor.data], "intensity": form.intensity.data})
         flash('Post updated!', 'success')
         return redirect('/home')
 

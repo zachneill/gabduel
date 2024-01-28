@@ -32,7 +32,7 @@ def test_login(app, secondUser, unitContext):
                                       data=dict(login=secondUser.email, password="password"),
                                       follow_redirects=True)
         assert response.status_code == 200
-        assert b"This is Folks Gab/Duel" in response.data
+        assert b"This is Gab/Duel" in response.data
 
 
 def test_signup_GET(app, unitContext):
@@ -89,7 +89,7 @@ def test_already_signed_up(app, unitContext):
         # Establish an application context before running the tests
         response = testingClient.get(url_for('auth.signup'), follow_redirects=True)
         assert response.status_code == 200
-        assert b'This is Folks Gab/Duel' in response.data
+        assert b'This is Gab/Duel' in response.data
 
 
 @pytest.mark.usefixtures("authenticated_request")
@@ -98,7 +98,7 @@ def test_already_logged_in(app, newUser):
     with app.test_client() as testingClient:
         response = testingClient.get(url_for('auth.login'), follow_redirects=True)
         assert response.status_code == 200
-        assert b'This is Folks Gab/Duel' in response.data
+        assert b'This is Gab/Duel' in response.data
 
 
 @pytest.mark.usefixtures("authenticated_request")
@@ -159,7 +159,7 @@ def test_delete(app, newPost):
         # Establish an application context before running the tests
         response = testingClient.post('/delete', data={'postId': newPost.id}, follow_redirects=True)
         assert response.status_code == 200
-        assert b'This is Folks Gab/Duel' in response.data
+        assert b'This is Gab/Duel' in response.data
         assert b'title1' not in response.data
 
 

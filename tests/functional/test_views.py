@@ -21,7 +21,7 @@ def test_home(app):
         with app.app_context():
             response = testingClient.get(url_for('views.home'), follow_redirects=True)
             assert response.status_code == 200
-            assert b'This is Folks Gab/Duel' in response.data
+            assert b'This is Gab/Duel' in response.data
             # Test search bar post request from the home page
             response = testingClient.post(url_for('views.home'), follow_redirects=True, data=dict(search='test'))
 

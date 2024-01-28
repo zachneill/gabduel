@@ -12,6 +12,7 @@ class Post(db.Model):
     content = db.Column(db.String(1000), nullable=False)
     date = db.Column(db.DateTime(timezone=True), nullable=False, default=datetime.now())
     intensity = db.Column(db.Integer, nullable=False, default=1)
+    isDuel = db.Column(db.Boolean, nullable=False, default=False)
     authors = db.relationship('User', secondary=postAuthors,
                               back_populates="posts", passive_deletes=True, lazy=True)
 

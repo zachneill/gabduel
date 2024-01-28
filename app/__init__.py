@@ -5,7 +5,7 @@ import os
 import secrets
 from os import path
 
-from flask import Flask, redirect
+from flask import Flask, redirect, send_file, url_for
 from flask_bootstrap import Bootstrap5
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
@@ -61,5 +61,16 @@ def create_app():
     def method_not_allowed(e):
         print("Errored with: ", e)
         return redirect('/405')
+
+    # For PWA
+    @app.route('/manifest.json')
+    def serve_manifest():
+        return send_file(url_for('static',filename='manifest.json'),
+                         mimetype='application/manifest+json')
+
+    @app.route('/sw.js')
+    def serve_sw():
+        return send_file(url_for('static', filename='js/sw.js'),
+                         mimetype='application/javascript')
 
     return app

@@ -2,7 +2,6 @@
 {% set title = "Search Results" %}
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}
 
 {% block app_content %}
@@ -13,8 +12,10 @@
             {{ form.hidden_tag() }}
             <div class="justify-content-center">
                 <div class="form-group d-flex m-auto w-50">
-                    {{ form.search(class="form-control") }}
-                    {{ form.submit(class="btn btn-success") }}
+                    {{ form.search(class="form-control rounded-start-pill rounded-end-0") }}
+                    <button type=submit class="btn btn-success rounded-end-pill rounded-start-0">
+                        <span class="fa fa-search" title="Submit"></span>
+                    </button>
                 </div>
             </div>
         </form>

@@ -10,7 +10,8 @@ def test_createPost(newUser, secondUser, unitContext):
         It should create a new post with the correct attributes
     """
     # Create a test post
-    post = createPost({'title': 'title', 'content': 'content', 'authors': [newUser.id, secondUser.id]})
+    post = createPost({'title': 'title', 'content': 'content', 'intensity': 2,
+                       'authors': [newUser.id, secondUser.id]})
     # Check the attributes
     assert post.title == 'title'
     assert post.content == 'content'
@@ -23,13 +24,16 @@ def test_createPostNoAttributes(newUser, unitContext, secondUser):
     """
     # Test with no title
     with pytest.raises(SQLAlchemyError):
-        createPost({'content': 'content', 'authors': [newUser.id, secondUser.id]})
+        createPost({'content': 'content', 'authors': [newUser.id, secondUser.id], 'intensity': 2})
     # Test with no content
     with pytest.raises(SQLAlchemyError):
-        createPost({'title': 'title', 'authors': [newUser.id, secondUser.id]})
+        createPost({'title': 'title', 'authors': [newUser.id, secondUser.id], 'intensity': 2})
     # Test with no author
     with pytest.raises(SQLAlchemyError):
-        createPost({'title': 'title', 'content': 'content'})
+        createPost({'title': 'title', 'content': 'content', 'intensity': 2})
+    # Test with no intensity
+    with pytest.raises(SQLAlchemyError):
+        createPost({'title': 'title', 'content': 'content', 'authors': [newUser.id, secondUser.id]})
 
 
 def test_getPosts(newPost, secondPost):
@@ -58,7 +62,7 @@ def test_updatePost(newPost, newUser, thirdUser, unitContext):
     """
     # Update the post
     post = updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content',
-                       'authors': [newUser.id, thirdUser.id]})
+                       'authors': [newUser.id, thirdUser.id], 'intensity': 5})
     # Check the attributes
     assert post.title == 'new title'
     assert post.content == 'new content'
@@ -71,16 +75,20 @@ def test_updatePostNoAttributes(newPost):
     """
     # Test with no id
     with pytest.raises(NoResultFound):
-        updatePost({'title': 'new title', 'content': 'new content', 'authors': [98, 99]})
+        updatePost({'title': 'new title', 'content': 'new content', 'authors': [98, 99], 'intensity': 2})
     # Test with no title
     with pytest.raises(NoResultFound):
-        updatePost({'id': newPost.id, 'content': 'new content', 'authors': [98, 99]})
+        updatePost({'id': newPost.id, 'content': 'new content', 'authors': [98, 99], 'intensity': 2})
     # Test with no content
     with pytest.raises(NoResultFound):
-        updatePost({'id': newPost.id, 'title': 'new title', 'authors': [98, 99]})
+        updatePost({'id': newPost.id, 'title': 'new title', 'authors': [98, 99], 'intensity': 2})
     # Test with no authors
     with pytest.raises(NoResultFound):
-        updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content'})
+        updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content', 'intensity': 2})
+    # Test with no intensity
+    with pytest.raises(NoResultFound):
+        updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content',
+                    'authors': [98, 99]})
 
 
 def test_deletePost(newPost, unitContext):
