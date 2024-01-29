@@ -72,9 +72,10 @@ def getAuthors():
     return query
 
 
-def deleteUser(userId):
-    """Delete a user"""
+def deactivateUser(userId):
+    """Deactivate a user"""
     user = db.session.get(User, userId)
-    db.session.delete(user)
+    user.is_active = False
+    user.image = 'https://api.dicebear.com/7.x/micah/svg?seed=xj'
     db.session.commit()
     return user

@@ -1,10 +1,9 @@
 """This file contains the routes for the login/signup abilities, post CRUD, and admin abilities"""
 from flask import Blueprint, render_template, flash, url_for, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
-from werkzeug.utils import secure_filename
 
 from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUsers, \
-    makeAdmin, getUserById, deleteUser
+    makeAdmin, getUserById, deactivateUser
 from app.logic.posts import createPost, getPostById, updatePost, deletePost, supportAuthor
 from app.models.forms.AdminForm import AdminForm
 from app.models.forms.LoginForm import LoginForm
@@ -179,9 +178,9 @@ def admin():
     return render_template("admin.html", form=form, allUsers=allUsers)
 
 
-@auth.route('admin/deleteUser/<userId>', methods=["GET", "POST"])
+@auth.route('admin/deactivateUser/<userId>', methods=["GET", "POST"])
 @login_required
-def deleteUserAsAdmin(userId):
+def deactivateUserAsAdmin(userId):
     """Delete user route"""
     # Check if the user is NOT an admin
     if not current_user.isAdmin:
@@ -190,6 +189,6 @@ def deleteUserAsAdmin(userId):
     else:
         # Delete the user
         user = getUserById(userId)
-        deleteUser(userId)
-        flash(f'{user.firstName} has been deleted.', 'success')
+        deactivateUser(userId)
+        flash(f'{user.firstName} has been deactivated.', 'success')
     return redirect('/admin')

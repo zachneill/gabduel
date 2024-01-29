@@ -1,5 +1,18 @@
+@font-face {
+    font-family: 'Euphorigenic';
+    src: url('../fonts/euphorigenic.ttf');
+}
 body {
     background-color: #8fbc8f;
+    font-family: Montserrat, -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+}
+.e-font-bold {
+    font-family: 'Euphorigenic', sans-serif;
+    font-weight: bold;
+}
+.e-font {
+    font-family: 'Euphorigenic', sans-serif;
 }
 .indent {
     text-indent: 25px;

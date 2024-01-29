@@ -211,16 +211,16 @@ def test_admin(app):
 
 
 @pytest.mark.usefixtures("authenticated_request")
-def test_deleteUser(app, newUser, adminUser):
-    """Test the delete user functionality."""
+def test_deactivateUser(app, newUser, adminUser):
+    """Test the deactivate user functionality."""
     with app.test_client() as testingClient:
         # Test non-admin user failing to delete user
         newUser.isAdmin = False
-        response = testingClient.get(f'/admin/deleteUser/{newUser.id}', follow_redirects=True)
+        response = testingClient.get(f'/admin/deactivateUser/{newUser.id}', follow_redirects=True)
         assert response.status_code == 200
         assert b'You are not an admin' in response.data
         newUser.isAdmin = True
-        # Test admin user deleting user
-        response = testingClient.get(f'/admin/deleteUser/{adminUser.id}', follow_redirects=True)
+        # Test admin user deactivate user
+        response = testingClient.get(f'/admin/deactivateUser/{adminUser.id}', follow_redirects=True)
         assert response.status_code == 200
-        assert b'has been deleted' in response.data
+        assert b'has been deactivated' in response.data

@@ -42,6 +42,7 @@ with app.app_context(), app.test_request_context():
             password=fake.password(),
             isAdmin=False,
             image=f"https://randomuser.me/api/portraits/{gender}/{shuffledUsers[i]}.jpg",
+            is_active=True,
             supports=0,
             postCount=0,
             joined=fake.date_time_this_decade()

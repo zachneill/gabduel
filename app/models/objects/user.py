@@ -19,10 +19,11 @@ class User(db.Model, UserMixin):
     image = db.Column(db.String(20), nullable=False,
                       default='https://api.dicebear.com/7.x/micah/svg?seed=abc&mouth=smile')
     joined = db.Column(db.DateTime(timezone=True), nullable=False, default=datetime.now())
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
     supports = db.Column(db.Integer, nullable=False, default=0)
     postCount = db.Column(db.Integer, nullable=False, default=0)
     posts = db.relationship('Post', secondary=postAuthors, back_populates="authors",
-                            passive_deletes=True, lazy=True)
+                            passive_deletes=True, lazy=True, cascade='all, delete')
 
     def __repr__(self):
         return f"User('{self.firstName}', '{self.lastName}', '{self.email}')"

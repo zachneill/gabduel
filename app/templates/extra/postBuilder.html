@@ -82,21 +82,22 @@
         <br>
         <br>
     {% endfor %}
-    </div>
-        <nav aria-label="Page navigation">
+</div>
+{% if pages.items is defined and pages.items and pages %}
+    <nav aria-label="Page navigation">
         <ul class="my-3 pagination justify-content-center">
-        <li class="page-item d-none d-md-block {{ 'disabled opacity-50' if not pages.has_prev }}">
-            <a class="page-link border-0 bg-dark text-white" href="./{{ url }}?page={{ pages.prev_num }}" >Previous</a>
-        </li>
-        {% for page in pages.iter_pages(left_current=1, right_current=1, right_edge=1) %}
-            <li class="page-item {{ 'active' if page == pages.page }}">
-                <a class="page-link border-0" href="./{{ url }}?page={{ page }}">{{ page if page else "..." }}</a>
+            <li class="page-item d-none d-md-block {{ 'disabled opacity-50' if not pages.has_prev }}">
+                <a class="page-link border-0 bg-dark text-white" href="./{{ url }}?page={{ pages.prev_num }}" >Previous</a>
             </li>
-        {% endfor %}
-        <li class="page-item d-none d-md-block {{ 'disabled opacity-50' if not pages.has_next }}">
-            <a class="page-link border-0 bg-dark text-white" href='./{{ url }}?page="{{ pages.next_num }}'>Next</a>
-        </li>
-
+            {% for page in pages.iter_pages(left_current=1, right_current=1, right_edge=1) %}
+                <li class="page-item {{ 'active' if page == pages.page }}">
+                    <a class="page-link border-0" href="./{{ url }}?page={{ page }}">{{ page if page else "..." }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item d-none d-md-block {{ 'disabled opacity-50' if not pages.has_next }}">
+                <a class="page-link border-0 bg-dark text-white" href='./{{ url }}?page="{{ pages.next_num }}'>Next</a>
+            </li>
         </ul>
-        </nav>
+    </nav>
+{% endif %}
 <input type="hidden" id="csrf" value="{{ csrf_token() }}">
