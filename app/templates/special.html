@@ -1,0 +1,24 @@
+{% extends "extra/base.html" %}
+{% set title = "Special" %}
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
+
+{% block app_content %}
+    <div class="mt-5 text-center">
+        {%  if kind == 'gabs' %}
+            <h1>Gabs</h1>
+        {% elif kind == 'duels' %}
+            <h1>Duels</h1>
+        {% elif query == 'newest' %}
+            <h1>Newest</h1>
+        {% elif query == 'oldest' %}
+            <h1>Oldest</h1>
+        {% endif %}
+        <br>
+        <br>
+        {% with url='/' + query %}
+            {% include "extra/postBuilder.html" %}
+        {% endwith %}
+    </div>
+{% endblock %}

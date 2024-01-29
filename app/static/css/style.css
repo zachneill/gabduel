@@ -31,3 +31,6 @@ body {
 .supported {
     border: 0.2rem solid darkgreen;
 }
+.pointer_to_hand {
+    cursor: pointer;
+}

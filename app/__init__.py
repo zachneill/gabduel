@@ -33,6 +33,7 @@ def create_app():
 
     # Maintain login settings
     class Anonymous(AnonymousUserMixin):
+        """Used in case of anonymous user image and username NoneType errors."""
         def __init__(self):
             self.image = ''
             self.username = 'Anonymous'
@@ -42,7 +43,6 @@ def create_app():
     login_manager.login_message_category = "warning"
     login_manager.init_app(app)
     login_manager.anonymous_user = Anonymous
-
 
     @login_manager.user_loader
     def load_user(user_id):

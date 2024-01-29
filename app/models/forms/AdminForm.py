@@ -5,4 +5,4 @@ from wtforms.fields.simple import SubmitField
 
 class AdminForm(FlaskForm):
     """Admin Form for admin.html page"""
-    requestAdmin = SubmitField('Request Admin')
+    requestAdmin = SubmitField('Request Admin', render_kw={'class': 'btn btn-success'})

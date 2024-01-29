@@ -17,6 +17,3 @@ class Post(db.Model):
     supported2 = db.Column(db.Integer, nullable=False, default=0)
     authors = db.relationship('User', secondary=postAuthors,
                               back_populates="posts", passive_deletes=True, lazy=True)
-
-    def __repr__(self):
-        return f"Post('{self.title}', {self.content}, '{self.date}')"

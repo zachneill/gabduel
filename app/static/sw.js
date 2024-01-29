@@ -7,7 +7,6 @@ const addResourcesToCache = async (resources) => {
 self.addEventListener("install", (event) => {
     event.waitUntil(
         addResourcesToCache([
-            "/",
             'static/js/jquery-3.7.1.min.js',
             'static/js/base.js',
             'static/js/bootstrap.bundle.min.js',
@@ -15,7 +14,6 @@ self.addEventListener("install", (event) => {
             'static/css/bootstrap.min.css',
             'static/css/font-awesome.min.css',
             'static/css/style.css',
-            'static/manifest.json'
     ]),
   );
 });

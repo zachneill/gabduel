@@ -5,7 +5,7 @@
     <meta name="msapplication-TileColor" content="#8fbc8f">
     <meta name="theme-color" content="#8fbc8f">
     {% block styles %}
-        <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
+        <link rel="manifest" href="{{ url_for('static', filename="manifest.json") }}" crossorigin="use-credentials">
 
         <link rel="icon" type="image/png" sizes="192x192"
               href="{{ url_for('static', filename="images/icons/android-chrome-192x192.png") }}">
@@ -38,44 +38,15 @@
 
 {% block content %}
     <div class="row g-0">
+        {% include 'extra/navbar.html' %}
+        {% include 'extra/messages.html' %}
+    </div>
         <div class='col-12 col-md scroll-container overflow-visible'>
-            {% include 'extra/navbar.html' %}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        {% if category == 'danger' %}
-                            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center"
-                                 data-bs-dismiss="alert" aria-label="Close" role="alert" id="danger">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                            </div>
-                        {% elif category == 'warning' %}
-                            <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center"
-                                 data-bs-dismiss="alert" aria-label="Close" role="alert" id="warning">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                            </div>
-                        {% elif category == 'info' %}
-                            <div class="alert alert-info alert-dismissible fade show d-flex align-items-center"
-                                 data-bs-dismiss="alert" aria-label="Close" role="alert" id="info">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                            </div>
-                        {% else %}
-                            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center"
-                                 data-bs-dismiss="alert" aria-label="Close" role="alert" id="success">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            <div id="maincontent" class="main-content container">
+        <div class="row container-fluid">
+            <div class="col col-2 d-none d-md-block">
+                {% include 'extra/sidenav.html' %}
+            </div>
+            <div id="maincontent" class="col-md-10 main-content">
                 {% block app_content %}
                     {# application content in the app_content block #}
                 {% endblock %}
@@ -83,6 +54,8 @@
                 </div>
                 <div class="spacer my-0"></div>
             </div>
+        </div>
+
         </div>
 
         {% block footer %}

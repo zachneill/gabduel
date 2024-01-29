@@ -48,6 +48,7 @@ def newUser(app):
         user.password = 'password'
         user.isAdmin = False
         user.image = 'tests/testImage.png'
+        user.supports = 1
         db.session.add(user)
     return user
 
@@ -65,6 +66,7 @@ def secondUser(app):
         user.password = 'scrypt:32768:8:1$fajWmZeuTbMKdz7r$609c9395583ceffcdd714c5656794cb7c088de2af874cdb898c75d1c17145b1f8c03878bcd800435026fcf5989f6373a4b7f8b046d2f6c17810662842a3ecafc'
         user.isAdmin = False
         user.image = 'tests/testImage.png'
+        user.supports = 0
         db.session.add(user)
     return user
 
@@ -82,6 +84,7 @@ def thirdUser(app):
         user.password = 'pwd'
         user.isAdmin = False
         user.image = 'tests/testImage.png'
+        user.supports = 0
         db.session.add(user)
     return user
 
@@ -99,6 +102,7 @@ def adminUser(app):
         user.password = 'password'
         user.isAdmin = True
         user.image = 'tests/testImage.png'
+        user.supports = 0
         db.session.add(user)
     return user
 
@@ -112,6 +116,9 @@ def newPost(app, newUser, secondUser):
         post.id = 1
         post.title = 'title1'
         post.content = 'content1'
+        post.supported1 = 1
+        post.supported2 = 0
+        db.session.add(post)
         post.authors.append(newUser)
         post.authors.append(secondUser)
     return post
@@ -125,6 +132,8 @@ def secondPost(app, secondUser, thirdUser):
         post.id = 2
         post.title = 'title2'
         post.content = 'content2'
+        post.supported1 = 0
+        post.supported2 = 1
         db.session.add(post)
         post.authors.append(secondUser)
         post.authors.append(thirdUser)

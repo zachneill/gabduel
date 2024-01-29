@@ -1,16 +1,14 @@
 {% extends "extra/base.html" %}
-{% set title = "Home" %}
+{% set title = "Settings" %}
 {% block scripts %}
     {{ super() }}
 {% endblock %}
 
 {% block app_content %}
     <div class="mt-5 text-center">
-        <h1>This is Gab/Duel</h1>
+        <h1>Settings</h1>
         <br>
         <br>
-        {% with url='' %}
-            {% include "extra/postBuilder.html" %}
-        {% endwith %}
+        <a class="btn btn-success" href="/admin">Go to Administrator Panel</a>
     </div>
 {% endblock %}

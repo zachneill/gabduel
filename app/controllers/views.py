@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 
 from app.logic.accounts import getUsers, getAuthors, getUserByUsername
-from app.logic.posts import getPosts, getSearchResults, getUserPosts
+from app.logic.posts import getPosts, getSearchResults, getUserPosts, getSpecialPosts
 from app.models.forms.SearchForm import SearchForm
 
 views = Blueprint('views', __name__)
@@ -26,15 +26,24 @@ def about():
     return render_template("about.html", authors=authors)
 
 
+@views.route('/settings')
+def settings():
+    """Render the settings page"""
+    return render_template("settings.html")
+
+
 @views.route('/user/<username>')
 def profile(username):
     """Render the profile page"""
     user = getUserByUsername(username)
+    if user is None:
+        return redirect(url_for('views.page_not_found'))
     userPosts = getUserPosts(user)
     # Paginate the posts
     page = request.args.get('page', 1, type=int)
     pages = userPosts.paginate(page=page, per_page=5)
-    return render_template("profile.html", user=user, userPosts=userPosts, pages=pages)
+    return render_template("profile.html", user=user, userPosts=userPosts, pages=pages,
+                           url=username)
 
 
 @views.route('/search/<query>', methods=['GET', 'POST'])
@@ -51,6 +60,17 @@ def search(query):
         return redirect(url_for('views.search', query=form.search.data))
 
     return render_template("search.html", posts=posts, pages=pages, form=form, query=query)
+
+
+@views.route('/special/<kind>/<query>')
+def special(kind, query):
+    """Render the special page"""
+    posts = getSpecialPosts(kind, query)
+    # Paginate the posts
+    page = request.args.get('page', 1, type=int)
+    pages = posts.paginate(page=page, per_page=5)
+    return render_template("special.html", posts=posts, pages=pages,
+                           kind=kind, query=query)
 
 
 @views.route('/404')

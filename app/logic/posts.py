@@ -1,4 +1,5 @@
 """This file contains the logic functions for the posts"""
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
 from app.models.objects.post import Post
@@ -34,6 +35,39 @@ def getPosts():
 def getUserPosts(user):
     """Get all posts by a user"""
     return Post.query.filter(Post.authors.contains(user)).order_by(Post.date.desc())
+
+
+def getSpecialPosts(kind, query):
+    """ Filters post by type and intensity """
+    try:
+        if query == 'newest':
+            # Get all posts, sorted newest to oldest
+            return Post.query.order_by(Post.date.desc())
+        elif query == 'oldest':
+            # Get all posts, sorted oldest to newest
+            return Post.query.order_by(Post.date.asc())
+        # Check if filtering by gab or duel
+        if kind == 'gabs':
+            type = 'gab'
+        else:
+            type = "duel"
+        if query == "support":
+            # Get all posts of type "gab"
+            posts = Post.query.filter_by(type=type)
+            # Sum the supported1 and supported2 values for each post
+            posts = posts.with_entities(Post.id, Post.supported1 + Post.supported2).all()
+            # Sort the posts by the sum of supported1 and supported2
+            posts = sorted(posts, key=lambda x: x[1], reverse=True)
+            # Get the post ids
+            postIds = [post[0] for post in posts]
+            # Get the posts
+            return Post.query.filter(Post.id.in_(postIds))
+        else:
+            # Get posts, sorted by intensity
+            return Post.query.filter_by(type=type).order_by(Post.intensity.desc())
+    except Exception as e:
+        print("Failed to get special posts with error: ", e)
+        raise SQLAlchemyError
 
 
 def getPostById(postId):
@@ -105,5 +139,3 @@ def deletePost(data):
 def getSearchResults(query):
     """Get the search results"""
     return Post.query.filter(Post.title.contains(query) | Post.content.contains(query)).order_by(Post.date.desc())
-
-

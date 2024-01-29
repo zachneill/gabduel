@@ -1,0 +1,49 @@
+<div class="pt-5">
+    <div class="row card text-white bg-dark rounded-5 d-none d-md-block mt-5">
+        <div class="card-body">
+            <nav class="nav flex-column">
+                <a class="nav-link text-white" href="/special/both/newest">Newest</a>
+                <a class="nav-link text-white" href="/special/both/oldest">Oldest</a>
+                <hr>
+                <h2>Gabs
+                    <span>
+                        <img src="{{ url_for('static', filename='images/art/star.png') }}"
+                                        class="image-sm" alt="star">
+                    </span>
+                </h2>
+                <a class="nav-link text-white" href="/special/gabs/intense">Most Intense</a>
+                <a class="nav-link text-white" href="/special/gabs/support">Most Supported</a>
+                <hr>
+                <h2>Duels
+                    <span>
+                        <img src="{{ url_for('static', filename='images/art/fireball.png') }}"
+                                        class="image-sm" alt="star">
+                    </span>
+                </h2>
+                <a class="nav-link text-white" href="/special/duels/intense">Most Intense</a>
+                <a class="nav-link text-white" href="/special/duels/support">Most Supported</a>
+            </nav>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="row card text-white bg-dark rounded-5 d-none d-md-block mt-5">
+        <div class="card-body">
+            <nav class="nav flex-column">
+                {% if current_user.is_authenticated %}
+                    <h2>Welcome, {{ current_user.firstName }}!</h2>
+                {% endif %}
+                <a class="nav-link text-white" href="{{ "/user/"+ current_user.username if current_user.is_authenticated else "/login" }}">My Profile</a>
+                <a class="nav-link text-white" href="/settings">Settings</a>
+                {% if current_user.is_authenticated and current_user.isAdmin %}
+                    <a class="nav-link text-white" href="/admin">Admin Panel</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</div>

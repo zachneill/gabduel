@@ -70,3 +70,11 @@ def getAuthors():
     """Get all authors"""
     query = User.query.join(Post.authors).group_by(User.id).having(func.count(Post.id) > 0).all()
     return query
+
+
+def deleteUser(userId):
+    """Delete a user"""
+    user = db.session.get(User, userId)
+    db.session.delete(user)
+    db.session.commit()
+    return user

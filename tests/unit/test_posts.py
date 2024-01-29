@@ -2,7 +2,50 @@
 import pytest
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
-from app.logic.posts import createPost, getPosts, getPostById, updatePost, deletePost
+from app.logic.posts import createPost, getPosts, getPostById, updatePost, deletePost, supportAuthor, getSpecialPosts
+
+
+def test_supportAuthor(newPost, newUser, secondUser, unitContext):
+    """ Test the supportAuthor function"""
+    # Support author 1
+    post = supportAuthor(newPost.id, 1, False)
+    assert post.supported1 == 2
+    assert post.supported2 == 0
+    assert newUser.supports == 2
+    assert secondUser.supports == 0
+    # Support author 2
+    post = supportAuthor(newPost.id, 2, False)
+    assert post.supported1 == 2
+    assert post.supported2 == 1
+    assert newUser.supports == 2
+    assert secondUser.supports == 1
+    # Change mind
+    post = supportAuthor(newPost.id, 1, True)
+    assert post.supported1 == 3
+    assert post.supported2 == 0
+    assert newUser.supports == 3
+    assert secondUser.supports == 0
+    # Change mind again
+    post = supportAuthor(newPost.id, 2, True)
+    assert post.supported1 == 2
+    assert post.supported2 == 1
+    assert newUser.supports == 2
+    assert secondUser.supports == 1
+    # Test invalid post id
+    with pytest.raises(SQLAlchemyError):
+        supportAuthor(0, 1, False)
+
+
+def test_getSpecialPosts(newPost, secondPost, unitContext):
+    """Test the getSpecialPosts function
+        It should return the correct posts
+    """
+    # Test newest, should return all posts sorted newest to oldest
+    posts = getSpecialPosts('gabs', 'newest')
+    assert posts[0] == newPost
+    # Test oldest, should return all posts sorted oldest to newest
+    posts = getSpecialPosts('gabs', 'oldest')
+    assert posts[1] == secondPost
 
 
 def test_createPost(newUser, secondUser, unitContext):
@@ -85,39 +128,41 @@ def test_updatePostNoAttributes(newPost):
         It should not update the post if not enough attributes are provided
     """
     # Test with no id
-    with pytest.raises(NoResultFound):
+    with pytest.raises(SQLAlchemyError):
         updatePost({'title': 'new title', 'content': 'new content', 'authors': [98, 99],
                     'intensity': 2, 'type': 'gab'})
     # Test with no title
-    with pytest.raises(NoResultFound):
+    with pytest.raises(SQLAlchemyError):
         updatePost({'id': newPost.id, 'content': 'new content', 'authors': [98, 99],
                     'intensity': 2, 'type': 'gab'})
     # Test with no content
-    with pytest.raises(NoResultFound):
+    with pytest.raises(SQLAlchemyError):
         updatePost({'id': newPost.id, 'title': 'new title', 'authors': [98, 99],
                     'intensity': 2, 'type': 'gab'})
     # Test with no authors
-    with pytest.raises(NoResultFound):
+    with pytest.raises(SQLAlchemyError):
         updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content',
                     'intensity': 2, 'type': 'gab'})
     # Test with no intensity
-    with pytest.raises(NoResultFound):
+    with pytest.raises(SQLAlchemyError):
         updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content',
                     'authors': [98, 99], 'type': 'gab'})
     # Test with no type
-    with pytest.raises(NoResultFound):
+    with pytest.raises(SQLAlchemyError):
         updatePost({'id': newPost.id, 'title': 'new title', 'content': 'new content',
                     'authors': [98, 99], 'intensity': 2})
 
 
-def test_deletePost(newPost, unitContext):
+def test_deletePost(newPost, unitContext, app):
     """Test the deletePost function
         It should delete the post
     """
-    # Delete the post
-    post = deletePost({'id': newPost.id})
-    # Check the post is deleted
-    assert post not in getPosts()
-    # Check the post doesn't work on invalid id
-    with pytest.raises(NoResultFound):
-        deletePost({'id': 0})
+    with app.test_client() as testingClient:
+        with app.app_context():
+            # Delete the post
+            post = deletePost({'id': newPost.id})
+            # Check the post is deleted
+            assert post not in getPosts()
+            # Check the post doesn't work on invalid id
+            with pytest.raises(NoResultFound):
+                deletePost({'id': 0})

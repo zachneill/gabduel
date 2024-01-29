@@ -3,7 +3,7 @@ import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.logic.accounts import createUser, checkPassword, getUserByEmail, getUserByUsername, getUserById, getUsers, \
-    makeAdmin
+    makeAdmin, deleteUser
 from database import db
 
 
@@ -138,3 +138,13 @@ def test_makeAdmin(newUser):
     makeAdmin(newUser.id)
     # Check the user is an admin
     assert newUser.isAdmin
+
+
+def test_adminDeleteUser(newUser, unitContext):
+    """Test the deleteUser function
+        It should delete the user
+    """
+    # Check the user is deleted
+    assert newUser == getUserById(newUser.id)
+    deleteUser(newUser.id)
+    assert not getUserById(newUser.id)

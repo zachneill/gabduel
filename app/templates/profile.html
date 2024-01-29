@@ -1,5 +1,5 @@
 {% extends "extra/base.html" %}
-{% set title = '{{ user.username }}' %}
+{% set title = user.username %}
 {% block scripts %}
     {{ super() }}
 {% endblock %}
@@ -25,10 +25,15 @@
         <br>
         <br>
         <h3>{{ user.firstName }}'s posts</h3>
+        <br>
         {% if user.postCount == 0 %}
             <h5>No posts yet</h5>
         {% endif %}
         {% include "extra/postBuilder.html" %}
-    <br>
+        <br>
+        {% if current_user.isAdmin %}
+            <a class="btn btn-danger" href="/deleteUser/{{ user.id }}">Delete User</a>
+        {% endif %}
+        <br>
     </div>
 {% endblock %}

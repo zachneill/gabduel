@@ -3,6 +3,17 @@ import pytest
 from flask import url_for
 
 
+def test_support(app, newPost, secondUser, unitContext):
+    """Test the support functionality."""
+    with app.test_client() as testingClient:
+        print(f"newPost.id: {newPost.id}")
+        # Test supporting a post
+        response = testingClient.post('/post/support', data={'postId': newPost.id, 'supportId': secondUser.id,
+                                                             'mindChanged': True}, follow_redirects=True)
+        assert response.status_code == 200
+        assert b'This is' in response.data
+
+
 def test_login(app, secondUser, unitContext):
     """Test the login page."""
     # Send a GET request to the application
@@ -197,3 +208,19 @@ def test_admin(app):
         response = testingClient.get('/admin')
         assert response.status_code == 200
         assert b'All Users' in response.data
+
+
+@pytest.mark.usefixtures("authenticated_request")
+def test_deleteUser(app, newUser, adminUser):
+    """Test the delete user functionality."""
+    with app.test_client() as testingClient:
+        # Test non-admin user failing to delete user
+        newUser.isAdmin = False
+        response = testingClient.get(f'/admin/deleteUser/{newUser.id}', follow_redirects=True)
+        assert response.status_code == 200
+        assert b'You are not an admin' in response.data
+        newUser.isAdmin = True
+        # Test admin user deleting user
+        response = testingClient.get(f'/admin/deleteUser/{adminUser.id}', follow_redirects=True)
+        assert response.status_code == 200
+        assert b'has been deleted' in response.data

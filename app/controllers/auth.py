@@ -4,7 +4,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 
 from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUsers, \
-    makeAdmin
+    makeAdmin, getUserById, deleteUser
 from app.logic.posts import createPost, getPostById, updatePost, deletePost, supportAuthor
 from app.models.forms.AdminForm import AdminForm
 from app.models.forms.LoginForm import LoginForm
@@ -122,7 +122,7 @@ def update(postId):
     if form.validate_on_submit():
         # Update the post
         updatePost({"id": postId, "content": form.content.data, "title": form.title.data, "authors":
-                    [current_user.id, form.otherAuthor.data], "intensity": form.intensity.data,
+            [current_user.id, form.otherAuthor.data], "intensity": form.intensity.data,
                     "type": form.type.data})
         flash('Post updated!', 'success')
         return redirect('/home')
@@ -138,7 +138,7 @@ def support():
     supportId = int(request.form['supportId'])
     mindChanged = request.form['mindChanged'] == 'true'
     supportAuthor(postId, supportId, mindChanged)
-    return redirect(f'/home#author1_FN_{postId}')
+    return redirect(url_for('views.home'))
 
 
 @auth.route('/delete', methods=['POST'])
@@ -177,3 +177,19 @@ def admin():
         # Set up table for jinja display
         allUsers = getUsers()
     return render_template("admin.html", form=form, allUsers=allUsers)
+
+
+@auth.route('admin/deleteUser/<userId>', methods=["GET", "POST"])
+@login_required
+def deleteUserAsAdmin(userId):
+    """Delete user route"""
+    # Check if the user is NOT an admin
+    if not current_user.isAdmin:
+        flash("You are not an admin.", category="warning")
+        redirect('/home')
+    else:
+        # Delete the user
+        user = getUserById(userId)
+        deleteUser(userId)
+        flash(f'{user.firstName} has been deleted.', 'success')
+    return redirect('/admin')

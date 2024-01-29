@@ -13,6 +13,65 @@ def test_about(app):
             assert b'combine casual discussion' in response.data
 
 
+def test_settings(app):
+    """Test the about page."""
+    # Send a GET request to the application
+    with app.test_client() as testingClient:
+        # Establish an application context before running the tests
+        with app.app_context():
+            response = testingClient.get(url_for('views.settings'), follow_redirects=True)
+            assert response.status_code == 200
+            assert b'Settings' in response.data
+            assert b'Go to' in response.data
+
+
+def test_profile(app, newUser):
+    """Test the profile page."""
+    # Send a GET request to the application
+    with app.test_client() as testingClient:
+        # Establish an application context before running the tests
+        with app.app_context():
+            # Test a profile that exists
+            response = testingClient.get(url_for('views.profile',
+                                                 username=newUser.username), follow_redirects=True)
+            assert response.status_code == 200
+            assert b'Total posts made' in response.data
+
+            # Test a profile that doesn't exist
+            response = testingClient.get(url_for('views.profile',
+                                                 username='fake'), follow_redirects=True)
+            assert response.status_code == 404
+
+
+def testSpecialQueries(app):
+    """Test the special posts page."""
+    # Send a GET request to the application
+    with app.test_client() as testingClient:
+        # Establish an application context before running the tests
+        with app.app_context():
+            # Test intense gabs
+            response = testingClient.get(url_for('views.special',
+                                                 kind="gabs", query="intense"), follow_redirects=True)
+            assert response.status_code == 200
+            assert b'Gabs' in response.data
+            # Test intense duels
+            response = testingClient.get(url_for('views.special',
+                                                 kind="duels", query="intense"), follow_redirects=True)
+            assert response.status_code == 200
+            assert b'Duels' in response.data
+
+            # Test support gabs
+            response = testingClient.get(url_for('views.special',
+                                                 kind="gabs", query="support"), follow_redirects=True)
+            assert response.status_code == 200
+            assert b'Gabs' in response.data
+            # Test support duels
+            response = testingClient.get(url_for('views.special',
+                                                 kind="duels", query="support"), follow_redirects=True)
+            assert response.status_code == 200
+            assert b'Duels' in response.data
+
+
 def test_home(app):
     """Test the home page."""
     # Send a GET request to the application
