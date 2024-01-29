@@ -5,10 +5,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 from app.logic.accounts import createUser, getUserByEmail, getUserByUsername, checkPassword, getUsers, \
     makeAdmin, getUserById, deactivateUser
 from app.logic.posts import createPost, getPostById, updatePost, deletePost, supportAuthor
-from app.models.forms.AdminForm import AdminForm
-from app.models.forms.LoginForm import LoginForm
-from app.models.forms.PostForm import PostForm
-from app.models.forms.SignupForm import SignupForm
+from app.models.forms.admin_form import AdminForm
+from app.models.forms.login_form import LoginForm
+from app.models.forms.post_form import PostForm
+from app.models.forms.signup_form import SignupForm
 
 auth = Blueprint('auth', __name__)
 

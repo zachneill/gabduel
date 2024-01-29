@@ -3,7 +3,7 @@ from datetime import datetime
 
 from flask_login import UserMixin
 
-from app.models.objects.postAuthors import postAuthors
+from app.models.objects.post_authors import postAuthors
 from database import db
 
 

@@ -1,7 +1,7 @@
 """This file contains the Post object for the database"""
 from datetime import datetime
 
-from app.models.objects.postAuthors import postAuthors
+from app.models.objects.post_authors import postAuthors
 from database import db
 
 

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for
 
 from app.logic.accounts import getUsers, getAuthors, getUserByUsername
 from app.logic.posts import getPosts, getSearchResults, getUserPosts, getSpecialPosts
-from app.models.forms.SearchForm import SearchForm
+from app.models.forms.search_form import SearchForm
 
 views = Blueprint('views', __name__)
 
