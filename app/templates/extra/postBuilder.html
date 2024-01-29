@@ -26,7 +26,7 @@
                             </div>
                             <a href="/user/{{ post.authors[1].username }}">
                                 <img src="{{ post.authors[1].image if post.authors[1].image.startswith("https://")
-                                else post.authors[1].image }}" class="image-sm" id="avatar_{{ post.authors[1].id }}"
+                                else post.authors[1].image }}" class="image-sm w-100 h-100" id="avatar_{{ post.authors[1].id }}"
                                      alt="avatar_{{ post.authors[1].id }}">
                             </a>
                             <div class="mx-2 p-1 d-none d-md-block">
@@ -46,13 +46,13 @@
                     <p class="card-text text-start indent" id="content_{{ post.id }}">{{ post.content }}</p>
                     <br>
                     {% if current_user not in post.authors %}
-                        <button type="button" class="btn btn-success float-start mx-1"
+                        <button type="button" class="btn btn-success float-start m-1"
                                 data-author1_id="{{ post.authors[0].id }}"
                                 data-author2_id="{{ post.authors[1].id }}"
                                 onclick="support(1, {{ post.id }}, {{ post.authors[0].id }})"
                                 id="support_{{ post.id }}">Support {{ post.authors[0].firstName }}
                         </button>
-                        <button type="button" class="btn btn-secondary float-start mx-1"
+                        <button type="button" class="btn btn-secondary float-start m-1"
                                 data-author1_id="{{ post.authors[0].id }}"
                                 data-author2_id="{{ post.authors[1].id }}"
                                 onclick="support(2, {{ post.id }}, {{ post.authors[1].id }})"

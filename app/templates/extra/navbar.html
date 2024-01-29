@@ -46,8 +46,9 @@
                                  class="mt-0 pt-0 border border-3 rounded-circle border-success"
                                  style="max-width:3rem; max-height:3rem">
                         {% else %}
-                            <img src="{{ url_for('static', filename='images/avatars/'+current_user.username) }}"
-                                 alt="profile" class="mt-0 pt-0 h-auto me-1" style="max-width:2rem">
+                            <img src="{{ url_for('static', filename='images/avatars/'+current_user.username)+'.png' }}"
+                                 alt="profile"
+                                 class="mt-0 pt-0 border border-3 rounded-circle border-success" style="max-width:2rem">
                         {% endif %}
                     </a>
                 {% endif %}
