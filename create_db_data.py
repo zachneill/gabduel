@@ -10,9 +10,11 @@ from database import db
 from faker import Faker
 
 print('Removing old avatars...')
-for file in os.listdir("./app/static/images/avatars"):
-    os.remove(os.path.join("./app/static/images/avatars", file))
-
+if os.path.exists("./app/static/images/avatars"):
+    for file in os.listdir("./app/static/images/avatars"):
+        os.remove(os.path.join("./app/static/images/avatars", file))
+else:
+    os.makedirs("./app/static/images/avatars")
 fake = Faker()
 numUsers = 100
 numPosts = numUsers * 8
