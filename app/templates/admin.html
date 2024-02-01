@@ -22,7 +22,7 @@
                 </thead>
                 <tbody>
                 {% for record in allUsers %}
-                    <tr class="pointer_to_hand" onclick="window.location='/user/{{ record.username }}'">
+                    <tr class="pointer_to_hand" onclick="window.location='/profile/{{ record.username }}'">
                         <th scope="row">{{ record.id }}</th>
                         <td>{{ record.firstName }}</td>
                         <td>{{ record.lastName }}</td>

@@ -16,6 +16,7 @@ class PostForm(FlaskForm):
                               render_kw={'placeholder': 'Authors'})
     intensity = IntegerRangeField('Intensity', validators=[DataRequired()],
                                   render_kw={'placeholder': 'Intensity'}, default=1)
-    type = SelectField('Type', validators=[DataRequired()],render_kw={'placeholder':
-                                    'Authors'}, choices=[('duel', 'Duel'), ('gab', 'Gab')])
+    type = SelectField('Type', validators=[DataRequired()], render_kw={'placeholder':
+                            'Authors'},
+                       choices=[('duel', 'Duel'), ('gab', 'Gab')])
     submit = SubmitField('Post', render_kw={'class': 'btn btn-success'})

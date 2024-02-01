@@ -43,40 +43,27 @@ if ('serviceWorker' in navigator) {
     });
 }
 // Support function
-function support(authorNumber, postId, authorId) {
-    // Gets post id and support id
-    let supportId = authorNumber
-    let otherAuthorId = supportId === 1 ?
-        $("#support_"+postId).data("author2_id") :
-        $("#support_"+postId).data("author1_id")
-    let mindChanged = false
+function support(winnerId, loserId, postId) {
     // Check if there already is a green border around a previously supported author
-    mindChanged = $('#avatar_'+otherAuthorId).hasClass("supported")
+    let mindChanged = $('#avatar_'+loserId).hasClass("supported")
 
-    if (!mindChanged && $('#avatar_'+authorId).hasClass("supported")){
+    if (!mindChanged && $('#avatar_'+winnerId).hasClass("supported")){
         console.log("Already supporting this author")
     } else {
         $.ajax("/post/support", {
             method: "POST",
             data: {
                 postId: postId,
-                authorNumber: authorNumber,
-                supportId: supportId,
+                winnerId: winnerId,
                 mindChanged: mindChanged
             },
             success: function () {
                 // Add a green border around supported author's image
-                if (mindChanged) {
-                    $("#avatar_"+otherAuthorId).removeClass("supported")
-                    $("#avatar_"+otherAuthorId).addClass("opacity-50")
+                $("#avatar_"+winnerId).addClass("supported")
+                $("#avatar_"+winnerId).removeClass("opacity-50")
 
-                    $("#avatar_"+authorId).addClass("supported")
-                    $("#avatar_"+authorId).removeClass("opacity-50")
-
-                } else {
-                    $("#avatar_"+authorId).addClass("supported")
-                    $("#avatar_"+otherAuthorId).addClass("opacity-50")
-                }
+                $("#avatar_"+loserId).removeClass("supported")
+                $("#avatar_"+loserId).addClass("opacity-50")
             },
             error: function (error) {
                 // Logs error to console if unsuccessful

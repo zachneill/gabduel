@@ -39,7 +39,7 @@
                 {% if current_user.is_authenticated %}
                     <h2 class="text-center e-font">Welcome, {{ current_user.firstName }}!</h2>
                 {% endif %}
-                <a class="nav-link text-white" href="{{ "/user/"+ current_user.username if current_user.is_authenticated else "/login" }}">My Profile</a>
+                <a class="nav-link text-white" href="{{ "/profile/"+ current_user.username if current_user.is_authenticated else "/login" }}">My Profile</a>
                 <a class="nav-link text-white" href="/settings">Settings</a>
                 {% if current_user.is_authenticated and current_user.isAdmin %}
                     <a class="nav-link text-white" href="/admin">Admin Panel</a>

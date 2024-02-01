@@ -134,9 +134,9 @@ def support():
     """Update views route"""
     # Get the data from the ajax request
     postId = int(request.form['postId'])
-    supportId = int(request.form['supportId'])
+    winnerId = int(request.form['winnerId'])
     mindChanged = request.form['mindChanged'] == 'true'
-    supportAuthor(postId, supportId, mindChanged)
+    supportAuthor(winnerId, current_user.id, postId, mindChanged)
     return redirect(url_for('views.home'))
 
 

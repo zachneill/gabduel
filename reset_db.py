@@ -9,8 +9,13 @@ from database import db
 
 app = create_app()
 
-os.rmdir(url_for('static', filename='images/avatars'))
-os.mkdir(url_for('static', filename='images/avatars'))
 
-with app.app_context():
+with app.app_context(), app.test_request_context():
+    avatarFolder = url_for('static', filename='images/avatars')
+    if os.path.exists(avatarFolder):
+        for file in os.listdir(avatarFolder):
+            os.remove(os.path.join(avatarFolder, file))
+    else:
+        os.makedirs(avatarFolder)
     db.drop_all()
+    db.create_all()

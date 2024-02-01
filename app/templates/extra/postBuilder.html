@@ -6,14 +6,15 @@
                     <div class="card-header p-0 text-muted">
                         <div class="text-white px-2 d-flex justify-content-center">
                             <div class="mx-2 p-1 d-none d-md-block">
-                                <a href="/user/{{ post.authors[0].username }}" class="text-decoration-none link-light">
+                                <a href="/profile/{{ post.authors[0].username }}" class="text-decoration-none link-light">
                                     <p class="m-0 p-0" id="author1_FN_{{ post.id }}">{{ post.authors[0].firstName }} </p>
                                     <p class="m-0 p-0" id="author1_LN_{{ post.id }}"> {{ post.authors[0].lastName }}</p>
                                 </a>
                             </div>
-                            <a href="/user/{{ post.authors[0].username }}">
+                            <a href="/profile/{{ post.authors[0].username }}">
                                 <img src="{{ post.authors[0].image if post.authors[0].image.startswith("https://")
-                                else post.authors[0].image }}" class="image-sm w-100 h-100" id="avatar_{{ post.authors[0].id }}"
+                                else post.authors[0].image }}" class="image-sm w-100 h-100 {{ 'supported' if
+                                 post.authors[0].id in supportedPosts }}" id="avatar_{{ post.authors[0].id }}"
                                      alt="avatar_{{ post.authors[0].id }}">
                             </a>
                             <div class="text-white d-flex justify-content-center text-center mx-2">
@@ -24,13 +25,14 @@
                                          alt="star" class="image-xs">
                                 {% endfor %}
                             </div>
-                            <a href="/user/{{ post.authors[1].username }}">
+                            <a href="/profile/{{ post.authors[1].username }}">
                                 <img src="{{ post.authors[1].image if post.authors[1].image.startswith("https://")
-                                else post.authors[1].image }}" class="image-sm w-100 h-100" id="avatar_{{ post.authors[1].id }}"
+                                else post.authors[1].image }}" class="image-sm w-100 h-100 {{ 'supported' if
+                                 post.authors[1].id in supportedPosts }}" id="avatar_{{ post.authors[1].id }}"
                                      alt="avatar_{{ post.authors[1].id }}">
                             </a>
                             <div class="mx-2 p-1 d-none d-md-block">
-                                <a href="/user/{{ post.authors[1].username }}" class="text-decoration-none link-light">
+                                <a href="/profile/{{ post.authors[1].username }}" class="text-decoration-none link-light">
                                     <p class="m-0 p-0 text" id="author2_FN_{{ post.id }}">
                                         {{ post.authors[1].firstName }}
                                     </p>
@@ -45,17 +47,17 @@
                     <h3 class="card-title" id="title_{{ post.id }}">{{ post.title }}</h3>
                     <p class="card-text text-start indent" id="content_{{ post.id }}">{{ post.content }}</p>
                     <br>
-                    {% if current_user not in post.authors %}
+                    {% if current_user.is_authenticated and current_user not in post.authors %}
                         <button type="button" class="btn btn-success float-start m-1"
                                 data-author1_id="{{ post.authors[0].id }}"
                                 data-author2_id="{{ post.authors[1].id }}"
-                                onclick="support(1, {{ post.id }}, {{ post.authors[0].id }})"
+                                onclick="support({{ post.authors[0].id }}, {{ post.authors[1].id }}, {{ post.id }})"
                                 id="support_{{ post.id }}">Support {{ post.authors[0].firstName }}
                         </button>
                         <button type="button" class="btn btn-secondary float-start m-1"
                                 data-author1_id="{{ post.authors[0].id }}"
                                 data-author2_id="{{ post.authors[1].id }}"
-                                onclick="support(2, {{ post.id }}, {{ post.authors[1].id }})"
+                                onclick="support({{ post.authors[1].id }}, {{ post.authors[0].id }}, {{ post.id }})"
                                 id="support_{{ post.id }}">Support {{ post.authors[1].firstName }}
                         </button>
                     {% endif %}

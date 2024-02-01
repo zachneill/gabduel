@@ -35,7 +35,7 @@ def test_profile(app, newUser):
             response = testingClient.get(url_for('views.profile',
                                                  username=newUser.username), follow_redirects=True)
             assert response.status_code == 200
-            assert b'Total posts made' in response.data
+            assert b'Total post appearances made' in response.data
 
             # Test a profile that doesn't exist
             response = testingClient.get(url_for('views.profile',

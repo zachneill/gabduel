@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import current_user
 
-from app.logic.accounts import getUsers, getAuthors, getUserByUsername
-from app.logic.posts import getPosts, getSearchResults, getUserPosts, getSpecialPosts
+from app.logic.accounts import getAuthors, getUserByUsername
+from app.logic.posts import getPosts, getSearchResults, getUserPosts, getSpecialPosts, getUserSupportedPostsById, \
+    getUserSupportedPostsCountById
 from app.models.forms.search_form import SearchForm
 
 views = Blueprint('views', __name__)
@@ -13,10 +15,16 @@ def home():
     """Render the home page"""
     # Get the posts
     posts = getPosts()
+    if current_user.is_authenticated:
+        supportedPostObjects = getUserSupportedPostsById(current_user.id)
+        supportedPosts = [row.authorId for row in supportedPostObjects]
+    else:
+        supportedPosts = []
     # Paginate the posts
+    print(supportedPosts)
     page = request.args.get('page', 1, type=int)
     pages = posts.paginate(page=page, per_page=5)
-    return render_template("home.html", posts=posts, pages=pages)
+    return render_template("home.html", posts=posts, pages=pages, supportedPosts=supportedPosts)
 
 
 @views.route('/about')
@@ -32,18 +40,28 @@ def settings():
     return render_template("settings.html")
 
 
-@views.route('/user/<username>')
+@views.route('/profile/<username>')
 def profile(username):
     """Render the profile page"""
     user = getUserByUsername(username)
     if user is None:
+        flash(f"Username {username} not found in database")
         return redirect(url_for('views.page_not_found'))
     userPosts = getUserPosts(user)
     # Paginate the posts
     page = request.args.get('page', 1, type=int)
     pages = userPosts.paginate(page=page, per_page=5)
+    # Get times supported
+    supports = getUserSupportedPostsCountById(user.id)
+    # Get supported posts
+    if current_user.is_authenticated:
+        supportedPostObjects = getUserSupportedPostsById(current_user.id)
+        supportedPosts = [row.authorId for row in supportedPostObjects]
+    else:
+        supportedPosts = []
+
     return render_template("profile.html", user=user, userPosts=userPosts, pages=pages,
-                           url=username)
+                           url=username, supports=supports, Posts=supportedPosts)
 
 
 @views.route('/search/<query>', methods=['GET', 'POST'])
@@ -56,10 +74,17 @@ def search(query):
     pages = posts.paginate(page=page, per_page=10)
     # Add the search bar
     form = SearchForm()
+    # Get supported posts
+    if current_user.is_authenticated:
+        supportedPostObjects = getUserSupportedPostsById(current_user.id)
+        supportedPosts = [row.authorId for row in supportedPostObjects]
+    else:
+        supportedPosts = []
     if form.validate_on_submit():
         return redirect(url_for('views.search', query=form.search.data))
 
-    return render_template("search.html", posts=posts, pages=pages, form=form, query=query)
+    return render_template("search.html", posts=posts, pages=pages, form=form, query=query,
+                           supportedPosts=supportedPosts)
 
 
 @views.route('/special/<kind>/<query>')
@@ -69,8 +94,14 @@ def special(kind, query):
     # Paginate the posts
     page = request.args.get('page', 1, type=int)
     pages = posts.paginate(page=page, per_page=5)
+    # Get supported posts
+    if current_user.is_authenticated:
+        supportedPostObjects = getUserSupportedPostsById(current_user.id)
+        supportedPosts = [row.authorId for row in supportedPostObjects]
+    else:
+        supportedPosts = []
     return render_template("special.html", posts=posts, pages=pages,
-                           kind=kind, query=query)
+                           kind=kind, query=query, supportedPosts=supportedPosts)
 
 
 @views.route('/404')

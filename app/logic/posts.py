@@ -1,8 +1,8 @@
 """This file contains the logic functions for the posts"""
-from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
 from app.models.objects.post import Post
+from app.models.objects.support import Support
 from app.models.objects.user import User
 from database import db
 
@@ -11,7 +11,7 @@ def createPost(data):
     """Create a new post"""
     try:
         newPost = Post(title=data['title'], content=data['content'], intensity=data['intensity'],
-                       type=data['type'], supported1=0, supported2=0)
+                       type=data['type'])
         db.session.add(newPost)
         author1 = db.session.get(User, data['authors'][0])
         author2 = db.session.get(User, data['authors'][1])
@@ -25,6 +25,24 @@ def createPost(data):
         raise SQLAlchemyError
 
     return newPost
+
+
+def getSupportsByPost(postId):
+    """Get the number of supports for a post"""
+    return Support.query.filter(Support.postId == postId)
+
+
+def getPostSupportsCountById(postId):
+    """Get the number of supports for a post"""
+    return (Support.query.filter(Support.postId == postId)).count()
+
+
+def getUserSupportedPostsById(userId):
+    return Support.query.filter(Support.supporterId == userId).all()
+
+
+def getUserSupportedPostsCountById(userId):
+    return (Support.query.filter(Support.authorId == userId)).count()
 
 
 def getPosts():
@@ -96,31 +114,33 @@ def updatePost(data):
     return post
 
 
-def supportAuthor(postId, supportId, mindChanged):
+def createSupport(authorId, supporterId, postId):
+    newSupport = Support()
+    newSupport.supporterId = supporterId
+    newSupport.authorId = authorId
+    newSupport.postId = postId
+    db.session.add(newSupport)
+    db.session.commit()
+    return newSupport
+
+
+def removeSupport(supporterId, postId):
+    supportInstance = Support.query.filter_by(postId=postId, supporterId=supporterId).first()
+    db.session.delete(supportInstance)
+
+
+def supportAuthor(winnerId, supporterId, postId, mindChanged):
     """Support an author"""
     try:
-        post = db.session.get(Post, postId)
-        author1 = post.authors[0]
-        author2 = post.authors[1]
-        if supportId == 1:
-            post.supported1 += 1
-            author1.supports += 1
-        else:
-            post.supported2 += 1
-            author2.supports += 1
         if mindChanged:
-            if supportId == 1:
-                post.supported2 -= 1
-                author2.supports -= 1
-            else:
-                post.supported1 -= 1
-                author1.supports -= 1
+            removeSupport(supporterId, postId)
+        newSupport = createSupport(winnerId, supporterId, postId)
         db.session.commit()
     except Exception as e:
         print("Failed to support author with error: ", e)
         raise SQLAlchemyError
 
-    return post
+    return newSupport
 
 
 def deletePost(data):
