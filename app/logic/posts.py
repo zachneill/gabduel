@@ -1,4 +1,5 @@
 """This file contains the logic functions for the posts"""
+from sqlalchemy import func, text
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
 from app.models.objects.post import Post
@@ -71,15 +72,12 @@ def getSpecialPosts(kind, query):
             type = "duel"
         if query == "support":
             # Get all posts of type "gab"
-            posts = Post.query.filter_by(type=type)
-            # Sum the supported1 and supported2 values for each post
-            posts = posts.with_entities(Post.id, Post.supported1 + Post.supported2).all()
-            # Sort the posts by the sum of supported1 and supported2
+            posts = db.session.query(Post, func.count(Post.supports).label('total')) \
+                .join(Post.supports).group_by(Post).order_by(text('total DESC'))
             posts = sorted(posts, key=lambda x: x[1], reverse=True)
-            # Get the post ids
-            postIds = [post[0] for post in posts]
-            # Get the posts
-            return Post.query.filter(Post.id.in_(postIds))
+            postIds = [post[0].id for post in posts]
+            posts = Post.query.filter(type == type, Post.id.in_(postIds))
+            return posts
         else:
             # Get posts, sorted by intensity
             return Post.query.filter_by(type=type).order_by(Post.intensity.desc())
