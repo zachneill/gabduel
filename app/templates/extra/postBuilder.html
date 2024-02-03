@@ -13,8 +13,12 @@
                             </div>
                             <a href="/profile/{{ post.authors[0].username }}">
                                 <img src="{{ post.authors[0].image if post.authors[0].image.startswith("https://")
-                                else post.authors[0].image }}" class="image-sm w-100 h-100 {{ 'supported' if
-                                 post.authors[0].id in supportedPosts }}" id="avatar_{{ post.authors[0].id }}"
+                                else post.authors[0].image }}" class="image-sm w-100 h-100
+                                     {{ 'supported' if post.id in supportedPostIds and
+                                     post.authors[0].id==supportedPosts[post.id]}}
+                                     {{ "opacity-50" if post.id in supportedPostIds and
+                                     post.authors[1].id==supportedPosts[post.id] }}"
+                                     id="avatar_{{ post.authors[0].id }}"
                                      alt="avatar_{{ post.authors[0].id }}">
                             </a>
                             <div class="text-white d-flex justify-content-center text-center mx-2">
@@ -27,8 +31,12 @@
                             </div>
                             <a href="/profile/{{ post.authors[1].username }}">
                                 <img src="{{ post.authors[1].image if post.authors[1].image.startswith("https://")
-                                else post.authors[1].image }}" class="image-sm w-100 h-100 {{ 'supported' if
-                                 post.authors[1].id in supportedPosts }}" id="avatar_{{ post.authors[1].id }}"
+                                else post.authors[1].image }}" class="image-sm w-100 h-100
+                                     {{ 'supported' if post.id in supportedPostIds and
+                                     post.authors[1].id==supportedPosts[post.id] }}
+                                     {{ "opacity-50" if post.id in supportedPostIds and
+                                     post.authors[0].id==supportedPosts[post.id] }}"
+                                     id="avatar_{{ post.authors[1].id }}"
                                      alt="avatar_{{ post.authors[1].id }}">
                             </a>
                             <div class="mx-2 p-1 d-none d-md-block">
@@ -39,7 +47,6 @@
                                     <p class="m-0 p-0"> {{ post.authors[1].lastName }}</p>
                                 </a>
                             </div>
-
                         </div>
                         <p class="text-white">{{ post.date.strftime('%m/%d/%Y') }}</p>
                     </div>

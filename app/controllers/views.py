@@ -17,14 +17,16 @@ def home():
     posts = getPosts()
     if current_user.is_authenticated:
         supportedPostObjects = getUserSupportedPostsById(current_user.id)
-        supportedPosts = [row.authorId for row in supportedPostObjects]
+        supportedPostIds = [support.postId for support in supportedPostObjects]
+        supportedPosts = {support.postId: support.authorId for support in supportedPostObjects}
     else:
-        supportedPosts = []
+        supportedPostIds = []
+        supportedPosts = {}
     # Paginate the posts
-    print(supportedPosts)
     page = request.args.get('page', 1, type=int)
     pages = posts.paginate(page=page, per_page=5)
-    return render_template("home.html", posts=posts, pages=pages, supportedPosts=supportedPosts)
+    return render_template("home.html", posts=posts, pages=pages, supportedPosts=supportedPosts,
+                           supportedPostIds=supportedPostIds)
 
 
 @views.route('/about')
@@ -56,12 +58,15 @@ def profile(username):
     # Get supported posts
     if current_user.is_authenticated:
         supportedPostObjects = getUserSupportedPostsById(current_user.id)
-        supportedPosts = [row.authorId for row in supportedPostObjects]
+        supportedPostIds = [support.postId for support in supportedPostObjects]
+        supportedPosts = {support.postId: support.authorId for support in supportedPostObjects}
     else:
-        supportedPosts = []
+        supportedPostIds = []
+        supportedPosts = {}
 
     return render_template("profile.html", user=user, userPosts=userPosts, pages=pages,
-                           url=username, supports=supports, Posts=supportedPosts)
+                           url=username, supports=supports, supportedPostIds=supportedPostIds,
+                           supportedPosts=supportedPosts)
 
 
 @views.route('/search/<query>', methods=['GET', 'POST'])
@@ -77,14 +82,16 @@ def search(query):
     # Get supported posts
     if current_user.is_authenticated:
         supportedPostObjects = getUserSupportedPostsById(current_user.id)
-        supportedPosts = [row.authorId for row in supportedPostObjects]
+        supportedPostIds = [support.postId for support in supportedPostObjects]
+        supportedPosts = {support.postId: support.authorId for support in supportedPostObjects}
     else:
-        supportedPosts = []
+        supportedPostIds = []
+        supportedPosts = {}
     if form.validate_on_submit():
         return redirect(url_for('views.search', query=form.search.data))
 
     return render_template("search.html", posts=posts, pages=pages, form=form, query=query,
-                           supportedPosts=supportedPosts)
+                           supportedPosts=supportedPosts, supportedPostIds=supportedPostIds)
 
 
 @views.route('/special/<kind>/<query>')
@@ -97,11 +104,13 @@ def special(kind, query):
     # Get supported posts
     if current_user.is_authenticated:
         supportedPostObjects = getUserSupportedPostsById(current_user.id)
-        supportedPosts = [row.authorId for row in supportedPostObjects]
+        supportedPostIds = [support.postId for support in supportedPostObjects]
+        supportedPosts = {support.postId: support.authorId for support in supportedPostObjects}
     else:
-        supportedPosts = []
+        supportedPostIds = []
+        supportedPosts = {}
     return render_template("special.html", posts=posts, pages=pages,
-                           kind=kind, query=query, supportedPosts=supportedPosts)
+                           kind=kind, query=query, supportedPosts=supportedPosts, supportedPostIds=supportedPostIds)
 
 
 @views.route('/404')

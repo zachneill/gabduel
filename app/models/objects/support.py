@@ -14,6 +14,5 @@ class Support(db.Model, UserMixin):
     userAuthorId = db.relationship("User", backref="authorId", foreign_keys=[authorId])
     userSupporterId = db.relationship("User", backref="supporterId", foreign_keys=[supporterId])
 
-
-    # def __repr__(self):
-    #     return f"Support('{self.postId}', '{self.authorId}', '{self.supporterId}')"
+    def __repr__(self):
+        return f"Support('{self.postId}', '{self.authorId}', '{self.supporterId}')"

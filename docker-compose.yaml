@@ -1,12 +1,27 @@
-version: "3.8"
+version: "3.9"
+
 services:
   web:
-    build: ./
-    container_name: gd-web
+    container_name: web
+    image: zachneill/gabduel:latest
+    build: .
     ports:
       - "5000:5000"
-    volumes:
-      - ./:/app
     environment:
-      FLASK_ENV: development
-      FLASK_APP: app.py
+      - DB_URL=postgresql://postgres:postgres@db:5432/gabduel
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: postgres:16-alpine3.19
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=gabduel
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}

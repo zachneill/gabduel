@@ -3,9 +3,9 @@
 """
 import os
 import secrets
-from os import path
+from os import environ
 
-from flask import Flask, redirect, send_file, url_for
+from flask import Flask, redirect, send_file
 from flask_bootstrap import Bootstrap5
 from flask_login import LoginManager, AnonymousUserMixin
 from flask_wtf import CSRFProtect
@@ -24,8 +24,7 @@ def create_app():
     CSRFProtect(app)
 
     # Connect to database
-    basedir = path.abspath(os.path.dirname(__file__))
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+    app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('DB_URL')
     app.config["SECRET_KEY"] = secrets.token_urlsafe(16)
     db.init_app(app)
     with app.app_context():
