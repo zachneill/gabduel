@@ -1,0 +1,1 @@
+cp -f C:/Users/ZN/.docker/config.json config.json

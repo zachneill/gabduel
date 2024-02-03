@@ -1,7 +1,6 @@
 """This file is one of the main files of the application. It creates the app,
     connects the database, and registers the blueprints. It also maintains login functionality.
 """
-import os
 import secrets
 from os import environ
 

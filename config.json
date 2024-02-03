@@ -1,0 +1,15 @@
+{
+	"auths": {
+		"ghcr.io": {},
+		"https://index.docker.io/v1/": {
+			"auth": "emFjaG5laWxsOm5oc0RAJCExMTE="
+		}
+	},
+	"credsStore": "desktop",
+	"currentContext": "default",
+	"plugins": {
+		"-x-cli-hints": {
+			"enabled": "true"
+		}
+	}
+}

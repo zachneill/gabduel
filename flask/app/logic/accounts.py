@@ -1,6 +1,7 @@
 """This file contains the logic for functions related to accounts"""
 import os
 import uuid
+
 from flask import url_for
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError

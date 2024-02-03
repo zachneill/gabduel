@@ -3,10 +3,10 @@ version: "3.9"
 services:
   web:
     container_name: web
-    image: zachneill/gabduel:latest
-    build: .
+#    image: zachneill/gabduel:latest
+    build: flask
     ports:
-      - "5000:5000"
+      - "5000"
     environment:
       - DB_URL=postgresql://postgres:postgres@db:5432/gabduel
       - PYTHONUNBUFFERED=1
