@@ -47,3 +47,6 @@ body {
 .pointer_to_hand {
     cursor: pointer;
 }
+.un-clickable {
+    pointer-events: none;
+}

@@ -4,10 +4,10 @@
 import secrets
 from os import environ
 
-from flask import Flask, redirect, send_file
 from flask_bootstrap import Bootstrap5
 from flask_login import LoginManager, AnonymousUserMixin
 from flask_wtf import CSRFProtect
+from flask import Flask, redirect, send_file
 
 from app.controllers.auth import auth
 from app.controllers.views import views
@@ -22,8 +22,9 @@ def create_app():
     Bootstrap5(app)
     CSRFProtect(app)
 
-    # Connect to database
-    app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('DB_URL')
+    # URL set in docker-compose.yaml (prod) and setup.sh (dev)
+    app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('DATABASE_URL')
+
     app.config["SECRET_KEY"] = secrets.token_urlsafe(16)
     db.init_app(app)
     with app.app_context():
@@ -32,6 +33,7 @@ def create_app():
     # Maintain login settings
     class Anonymous(AnonymousUserMixin):
         """Used in case of anonymous user image and username NoneType errors."""
+
         def __init__(self):
             self.image = ''
             self.username = 'Anonymous'

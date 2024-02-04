@@ -1,6 +1,6 @@
 FROM python:3.12-alpine3.19
 
-WORKDIR /app
+WORKDIR /app/
 
 COPY requirements.txt ./
 
@@ -8,6 +8,11 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+# This connects to the database on localhost port 5432
+ENV DATABASE_URL postgresql://postgres:postgres@localhost:5432/gabduel
+ENV APP_ENV development
+
 EXPOSE 5000
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+# Uses flask server debug mode since gunicorn doesn't have hot reload
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000", "--debug"]

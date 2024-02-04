@@ -2,17 +2,18 @@ version: "3.9"
 
 services:
   web:
-#    container_name: web   can't have custom container_name
-#    image: zachneill/gabduel:latest
-    build: flask
+    image: zachneill/gabduel:latest
+    build:
+      context: flask
+      dockerfile: Dockerfile.dev  # Dockerfile.dev for development, Dockerfile for production
+    volumes: ['./flask:/app']  # Comment out for production
+    deploy:
+      replicas: 2
     ports:
       - "5000"
     environment:
-      - DB_URL=postgresql://postgres:postgres@db:5432/gabduel
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/gabduel
       - PYTHONUNBUFFERED=1
-      - PYTHONUNBUFFERED=1
-    deploy:
-      replicas: 2
     depends_on:
       - db
   nginx:

@@ -8,8 +8,9 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-#EXPOSE 5000
+# This connects to a database called db
+ENV DATABASE_URL postgresql://postgres:postgres@db:5432/gabduel
+ENV APP_ENV production
 
+# Uses gunicorn instead of flask built-in server
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]
-
-#CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]

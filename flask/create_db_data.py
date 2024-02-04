@@ -51,17 +51,22 @@ with app.app_context(), app.test_request_context():
             joined=fake.date_time_this_decade()
         )
         db.session.add(user)
+    db.session.commit()
+
     print('Creating new posts...')
     for i in range(numPosts):
         total = random.randint(1, 5000)
+        numSentences = random.randint(1, 20)
         post = Post(
             title=fake.sentence(),
-            content=fake.paragraph(nb_sentences=20, variable_nb_sentences=True),
+            content=fake.paragraph(nb_sentences=numSentences, variable_nb_sentences=True),
             date=fake.date_time_this_decade(),
             intensity=random.randint(1, 5),
             type=random.choice(['duel', 'gab']),
         )
         db.session.add(post)
+    db.session.commit()
+
     print('Linking authors to posts...')
     for i in range(numPosts):
         post = db.session.get(Post, i + 1)
@@ -76,6 +81,8 @@ with app.app_context(), app.test_request_context():
         post.authors.append(author2)
         author1.postCount += 1
         author2.postCount += 1
+    db.session.commit()
+
     print('Supporting authors...')
     for userId in range(1, numUsers+1):
         shuffledPostIds = list(range(1, numPosts+1))

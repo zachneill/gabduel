@@ -9,7 +9,7 @@ class Post(db.Model):
     """Post model"""
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False, default="Untitled Post")
-    content = db.Column(db.String(1000), nullable=False)
+    content = db.Column(db.String(3000), nullable=False)
     date = db.Column(db.DateTime(timezone=True), nullable=False, default=datetime.now())
     intensity = db.Column(db.Integer, nullable=False, default=1)
     type = db.Column(db.String(10), nullable=False, default='Duel')
