@@ -3,9 +3,28 @@ services:
   - docker
 
 before_install:
+  - cd flask
   - docker build -t zachneill/gabduel -f Dockerfile .
+  - cd ..
 
 
 script:
-  - python -m pylint flask/app
   - docker compose up db -d
+  - docker compose up -d
+  - cd flask
+  - python -m venv venv
+  - python -m pip install -r requirements.txt
+  - python -m pylint flask/app
+  - coverage run -m pytest
+  - coverage report --omit="*/test*,*/__init__.py,database.py,*/conftest.py"
+  - docker compose down
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "gabduel"
+  env: "Gabduel-env"
+  bucket_name: "elasticbeanstalk-us-east-2-994472286080"
+  bucket_path: "gabduel"
+  on:
+    branch: master
