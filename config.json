@@ -5,7 +5,7 @@
 			"auth": "emFjaG5laWxsOm5oc0RAJCExMTE="
 		}
 	},
-	"credsStore": "desktop",
+	"credStore": "desktop",
 	"currentContext": "default",
 	"plugins": {
 		"-x-cli-hints": {

@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    container_name: web
+#    container_name: web   can't have custom container_name
 #    image: zachneill/gabduel:latest
     build: flask
     ports:
@@ -10,8 +10,19 @@ services:
     environment:
       - DB_URL=postgresql://postgres:postgres@db:5432/gabduel
       - PYTHONUNBUFFERED=1
+      - PYTHONUNBUFFERED=1
+    deploy:
+      replicas: 2
     depends_on:
       - db
+  nginx:
+    image: nginx:1.25.3
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - web
   db:
     container_name: db
     image: postgres:16-alpine3.19

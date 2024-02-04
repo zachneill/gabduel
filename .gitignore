@@ -84,3 +84,4 @@ instance/*
 .env
 venv/
 /pycache/*
+__pycache__/

@@ -1,1 +1,3 @@
-cp -f C:/Users/ZN/.docker/config.json config.json
+# Change the line "credsStore" to "credStore"
+
+cp -f ./config.json C:/Users/ZN/.docker/config.json
