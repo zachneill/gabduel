@@ -5,8 +5,8 @@ services:
     image: zachneill/gabduel:latest
     build:
       context: flask
-      dockerfile: Dockerfile.dev  # Dockerfile.dev for development, Dockerfile for production
-    volumes: ['./flask:/app']  # Comment out for production
+      dockerfile: Dockerfile  # Dockerfile.dev for development, Dockerfile for production
+#    volumes: ['./flask:/app']  # Comment out for production
     deploy:
       replicas: 2
     ports:
