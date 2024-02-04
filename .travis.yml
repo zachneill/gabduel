@@ -9,12 +9,11 @@ before_install:
 
 
 script:
-  - docker-compose up db -d
-  - docker-compose up -d
+  - docker-compose up
   - cd flask
 #  - python -m pip install -r requirements.txt
-  - python -m pip install pylint
-  - python -m pylint app
+#  - python -m pip install pylint
+#  - python -m pylint app
 #  - python -m coverage run -m pytest
 #  - python -m coverage report --omit="*/test*,*/__init__.py,database.py,*/conftest.py"
   - cd ..
