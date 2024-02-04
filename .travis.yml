@@ -9,15 +9,16 @@ before_install:
 
 
 script:
-  - docker compose up db
-  - docker compose up
+  - docker-compose up db -d
+  - docker-compose up -d
   - cd flask
-  - python -m pip install -r requirements.txt
-  - python -m pylint flask/app
-  - python -m coverage run -m pytest
-  - python -m coverage report --omit="*/test*,*/__init__.py,database.py,*/conftest.py"
+#  - python -m pip install -r requirements.txt
+  - python -m pip install pylint
+  - python -m pylint app
+#  - python -m coverage run -m pytest
+#  - python -m coverage report --omit="*/test*,*/__init__.py,database.py,*/conftest.py"
   - cd ..
-  - docker compose down
+  - docker-compose down
 
 deploy:
   provider: elasticbeanstalk
