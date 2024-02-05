@@ -14,7 +14,7 @@ Only Docker is needed. This is great news for anyone with a Linux kernel
 To run this app in production-mode:
 - Set the docker-compose.yaml _**services-->web-->build-->dockerfile**_ 
 to ```Dockerfile```
-- Comment out _**services-->web-->**_```volumes: ['./flask:/app'] ```
+- Comment out _**services-->web-->**_```volumes: ['./api:/app'] ```
 - ```docker compose up```
   - If it fails, just run it again. Sometimes the database isn't ready in time, 
 even in spite of ```depends_on```. 

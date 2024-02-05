@@ -9,6 +9,9 @@
         <h1 class="e-font-bold">{{ user.firstName }} {{ user.lastName }}</h1>
         <img src="{{ user.image }}" alt="Profile Picture" class="img-fluid rounded-circle" width="200px">
         <br>
+        {% if user.id == current_user.id %}
+            <button class="btn-outline-success">Edit Profile</button>
+        {% endif %}
         {% if not user.is_active %}
             <p>This user is deactivated.</p>
         {% endif %}

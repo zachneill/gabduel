@@ -16,4 +16,4 @@ ENV APP_ENV production
 EXPOSE 80
 
 # Uses gunicorn instead of flask built-in server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]
+CMD ["gunicorn", "--workers", "3", "--threads", "12", "--preload", "--bind", "0.0.0.0:5000", "wsgi:app"]

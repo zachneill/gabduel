@@ -50,4 +50,5 @@ instance/*
 venv/
 /pycache/*
 __pycache__/
-/flask/.idea/
+/api/.idea/
+!/api/.idea/

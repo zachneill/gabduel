@@ -15,34 +15,36 @@ from app.logic.accounts import getUserById
 from database import db
 
 
+class Anonymous(AnonymousUserMixin):
+    """Used in case of anonymous user image and username NoneType errors."""
+
+    def __init__(self):
+        self.image = ''
+        self.username = 'Anonymous'
+
+
 def create_app():
     """Creates the app, connects the database, registers the blueprints, and inits login."""
     # Create app reqs
     app = Flask(__name__)
-    Bootstrap5(app)
-    CSRFProtect(app)
-
-    # URL set in docker-compose.yaml (prod) and setup.sh (dev)
-    app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('DATABASE_URL')
-
-    app.config["SECRET_KEY"] = secrets.token_urlsafe(16)
-    db.init_app(app)
     with app.app_context():
+        Bootstrap5(app)
+        CSRFProtect(app)
+
+        # URL set in docker-compose.yaml (prod) and setup.sh (dev)
+        app.config["SQLALCHEMY_DATABASE_URI"] = environ.get('DATABASE_URL')
+
+        app.config["SECRET_KEY"] = secrets.token_urlsafe(16)
+        db.init_app(app)
         db.create_all()
 
-    # Maintain login settings
-    class Anonymous(AnonymousUserMixin):
-        """Used in case of anonymous user image and username NoneType errors."""
+        # Maintain login settings
 
-        def __init__(self):
-            self.image = ''
-            self.username = 'Anonymous'
-
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.login_message_category = "warning"
-    login_manager.init_app(app)
-    login_manager.anonymous_user = Anonymous
+        login_manager = LoginManager()
+        login_manager.login_view = 'auth.login'
+        login_manager.login_message_category = "warning"
+        login_manager.anonymous_user = Anonymous
+        login_manager.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):
