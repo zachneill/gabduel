@@ -9,7 +9,7 @@ services:
       - /app/node_modules
       - ./frontend:/app
     ports:
-      - "3000"
+      - "5173"
   api:
     image: zachneill/gabduel:latest
     build:
