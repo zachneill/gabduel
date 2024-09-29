@@ -1,14 +1,14 @@
-FROM node:20-alpine3.19 as build
+FROM node:20-alpine3.20 as build
 
-WORKDIR /app
-COPY ./package.json ./
+WORKDIR /usr/local/app
+COPY ./package.json /usr/local/app
 RUN npm install -g @angular/cli
 RUN npm install
 COPY . .
 RUN ng build --configuration=production
 
 
-FROM nginx:alpine3.18
-COPY --from=build /app/dist/gabduel /usr/share/nginx/html
+FROM nginx:alpine3.20
+COPY --from=build /usr/local/app/dist/gabduel/browser /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx","-g","daemon off;"]
