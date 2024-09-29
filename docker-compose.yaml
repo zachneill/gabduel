@@ -3,22 +3,22 @@ version: "3.9"
 services:
   web:
     build:
-      dockerfile: Dockerfile.dev  # Dockerfile.dev for development, Dockerfile for production
+      dockerfile: Dockerfile  # Dockerfile.dev for development, Dockerfile for production
       context: ./frontend
     restart: on-failure
     volumes:
       - /app/node_modules
       - ./frontend:/app
     ports:
-      - "5173"
-      - "5173:80"
+      - "4200"
+      - "4200:80"
   api:
     image: zachneill/gabduel:latest
     build:
       context: api
       dockerfile: Dockerfile  # Dockerfile.dev for development, Dockerfile for production
     restart: on-failure
-    volumes: ['./api:/app']  # Comment out for production
+    # volumes: ['./api:/app']  # Comment out for production
     deploy:
       replicas: 2
     ports:

@@ -1,13 +1,14 @@
 FROM node:20-alpine3.19 as build
 
 WORKDIR /app
-COPY ./package.json ./yarn.lock .yarnrc.yml ./
-RUN yarn install
+COPY ./package.json ./
+RUN npm install -g @angular/cli
+RUN npm install
 COPY . .
-RUN yarn build
+RUN ng build --configuration=production
 
 
 FROM nginx:alpine3.18
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/gabduel /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx","-g","daemon off;"]
