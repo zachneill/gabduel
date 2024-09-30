@@ -1,4 +1,4 @@
-"""This file resets the database."""
+"""This file resets the local database."""
 import os
 
 from flask import url_for

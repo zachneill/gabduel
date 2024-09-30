@@ -17,4 +17,4 @@ export FLASK_APP=wsgi.py
 export APP_ENV=development
 export FLASK_RUN_PORT=5000
 export FLASK_RUN_HOST=0.0.0.0   # To allow external routing to the application for development
-export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/gabduel
+export DATABASE_URL=postgresql://postgres:postgres@db:5432/gabduel

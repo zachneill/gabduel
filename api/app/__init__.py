@@ -52,8 +52,8 @@ def create_app():
         return getUserById(user_id)
 
     # Register blueprints
-    app.register_blueprint(views, url_prefix='/')
-    app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(views, url_prefix='/api')
+    app.register_blueprint(auth, url_prefix='/api')
 
     # Custom page error handlers
     @app.errorhandler(404)

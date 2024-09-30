@@ -6,69 +6,62 @@ The Gab/Duel Folks allows people with opinions to gab with and duel
 each other online. 
 
 ## Installation 
-Only Docker is needed. This is great news for anyone with a Linux kernel
-(or we lucky few who got Docker Desktop for Windows to work). 
+Only Docker is needed. This is great news for anyone with a Linux kernel. 
 
 
 ### Production Environment 
 To run this app in production-mode:
-- Set the docker-compose.yaml _**services-->web-->build-->dockerfile**_ 
-to ```Dockerfile```
-- Comment out _**services-->web-->**_```volumes: ['./api:/app'] ```
 - ```docker compose up```
   - If it fails, just run it again. Sometimes the database isn't ready in time, 
 even in spite of ```depends_on```. 
-- Navigate to _**localhost:8080**_
-  - Not to be confused with _**localhost:5000**_!!!
 
-To take down any of the layers, run ```docker compose down```. To 
+To take down the layers, run ```docker compose down```. To 
 remove a specific layer like the database, run ```docker compose down db```
+
+Add `--build` to rebuild a layer/see any changes you made. This flag works with any single layer, or all at once
 
 Sometimes on startup on Windows, Docker throws a docker-credential-desktop
 error. Fix it with `source docker-credential-fix.sh`
 
 
 ### Development Environment 
-To run this app in a development setting:
 - ```docker compose up -d db```
-  - This command starts the postgres database on port 5432
-
-#### If you want the nginx layer... 
-- ```docker compose up -d nginx```
-- Set the docker-compose.yaml _**web-->build-->dockerfile**_ to ```Dockerfile.dev```
-- Make sure ***services-->web-->***```volumes: ['./flask:/app']``` is uncommented 
+  - This command starts the postgres database on port 5432. Naturally, the host is called db. The -d flag means detached mode
 - ```docker compose up web```
-  - For extra measure, you can run ```docker compose up web --build```
-- Navigate to _**localhost:8080**_
-#### If you don't need nginx... 
-- ```source setup.sh```
-- ```flask run```
-  - ```ctrl+c``` to stop the server, ```flask run``` to rerun it
-- Navigate to _**localhost:5000**_
-  - Not to be confused with _**localhost:8080**_!!!
-
+  - Runs the Angular front end on port 4200
+  - You can also `cd frontend`, run `npm i`, then `ng serve` for live reloading and quicker development at the consequence of running things locally
+  - npm install takes ~5 minutes, but when this is in a working state, only dist/browser will be copied, so the 5 minute wait won't be in the image forever
+- `docker compose up api` 
+  - Runs the Flask backend on port 5000
+  - This layer depends on the db being up, since Flask immediately requests a connection to db when spun up
+  - Everything is prefixed with /api/ so localhost:5000 won't work but localhost:5000/api will
+  - To see the old Flask front end, remove `url_prefix='/api'` in the blueprints and go to port 5000. This breaks proxy_pass on the nginx layer
+- ```docker compose up -d nginx```
+  - Runs the nginx layer on port 8081
+  - This will proxy_pass traffic prefixed with /api/ to the api's port 5000 and non-prefixed traffic (front-end) to the web/frontend layer's port 80
+  - nginx reads it as web:80. That's just localhost:4200, since web, the front end's container name in the docker compose file, is run on 4200
 
 ## Testing 
 Pytest is the testing framework. The unit and functional tests are in the 
 tests directory in _**flask-->tests**_. 
 
-The app uses Coverage.py. For a coverage report, ```cd``` into the 
-flask directory and run ```source run_coverage.sh```. Or, run 
+The backend uses Coverage.py. For a coverage report, ```cd``` into the 
+api directory and run ```source run_coverage.sh```. Or, run 
 ```coverage run -m pytest``` followed by 
 ```coverage report --omit="*/test*,*/__init__.py,database.py,*/conftest.py"```
 
-For a linting test, run ```python -m pylint flask/app``` or 
-```python -m pylint app``` if you are in the flask directory. 
-
-A Travis CI pipeline is currently being set up. 
+For a linting test, run ```python -m pylint api/app``` or 
+```python -m pylint app``` if you are in the api directory. 
 
 ## Technologies 
 - _**Flask**_
-  - Front end and api
-- _**Gunicorn/Flask**_
+  - API
+- _**Angular**_
+  - Front end
+- _**Gunicorn**_
   - Server
 - _**nginx**_
-  - Load balancing/server
+  - Reverse proxy
 - _**PostgreSQL**_
   - Database
 - _**Flask-SQLAlchemy**_
@@ -77,11 +70,8 @@ A Travis CI pipeline is currently being set up.
   - Containerization
 - _**Pytest/Pylint**_
   - Testing
-- _**Travis CI**_
-  - CI/CD pipeline
 
 ## Dev Checklist
 - Fix tests
-- Travis CI
 - Edit profile
 - Request friends

@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   web:
+    container_name: web
     build:
       dockerfile: Dockerfile  # Dockerfile.dev for development, Dockerfile for production
       context: ./frontend
@@ -13,34 +14,28 @@ services:
       - "4200"
       - "4200:80"
   api:
-    image: zachneill/gabduel:latest
+    container_name: api
     build:
       context: api
       dockerfile: Dockerfile  # Dockerfile.dev for development, Dockerfile for production
     restart: on-failure
-    # volumes: ['./api:/app']  # Comment out for production
-    deploy:
-      replicas: 2
     ports:
-      - "5000"
+      - "5000:5000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/gabduel
       - PYTHONUNBUFFERED=1
     depends_on:
       - db
   nginx:
+    container_name: nginx
     build:
       context: nginx
       dockerfile: Dockerfile
-    image: nginx:1.25.3-alpine3.18
     volumes:
       - ./nginx/default.conf:/etc/nginx/default.conf:ro
     ports:
-      - "8080:80"
+      - "8081:80"
       - "443:443"
-    depends_on:
-      - web
-      - api
   db:
     container_name: db
     image: postgres:16-alpine3.19
